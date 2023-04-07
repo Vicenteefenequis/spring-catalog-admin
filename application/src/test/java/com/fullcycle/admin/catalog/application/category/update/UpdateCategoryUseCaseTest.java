@@ -2,6 +2,8 @@ package com.fullcycle.admin.catalog.application.category.update;
 
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
+import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -192,6 +194,38 @@ public class UpdateCategoryUseCaseTest {
                                 aCategory.getUpdatedAt().isBefore(aUpdateCategory.getUpdatedAt()) &&
                                 Objects.isNull(aUpdateCategory.getDeletedAt())
         ));
+    }
+
+
+    @Test
+    public void givenACommandWithAInvalidID_whenCallsUpdateCategory_thenShouldReturnNotFoundException() {
+
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedId = "123";
+
+        final var expectedErrorMessage = "Category with ID 123 was  not found";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = UpdateCategoryCommand.with(
+                expectedId,
+                expectedName,
+                expectedDescription,
+                expectedIsActive
+        );
+        when(categoryGateway.findById(eq(CategoryID.from(expectedId))))
+                .thenReturn(Optional.empty());
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class,() -> useCase.execute(aCommand));
+
+        Assertions.assertEquals(expectedErrorMessage,actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount,actualException.getErrors().size());
+
+        verify(categoryGateway,times(1)).findById(eq(CategoryID.from(expectedId)));
+
+        verify(categoryGateway,times(0)).update(any());
     }
 
 
