@@ -40,7 +40,19 @@ public class Category extends AggregateRoot<CategoryID> {
         final var deletedAt = isActive ? null : now;
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new CategoryValidator(this,handler).validate();
+    }
 
+    public  Category deactivate() {
+        if(getDeletedAt() == null) {
+            this.deletedAt = Instant.now();
+        }
+        this.active = false;
+        this.updatedAt = Instant.now();
+        return this;
+    }
     public CategoryID getId() {
         return id;
     }
@@ -69,8 +81,4 @@ public class Category extends AggregateRoot<CategoryID> {
         return deletedAt;
     }
 
-    @Override
-    public void validate(final ValidationHandler handler) {
-        new CategoryValidator(this,handler).validate();
-    }
 }
