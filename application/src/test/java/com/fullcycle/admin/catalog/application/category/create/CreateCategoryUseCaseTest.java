@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import java.util.Objects;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.*;
 
 public class CreateCategoryUseCaseTest {
 
@@ -26,9 +27,9 @@ public class CreateCategoryUseCaseTest {
 
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
-        final CategoryGateway categoryGateway = Mockito.mock(CategoryGateway.class);
+        final CategoryGateway categoryGateway = mock(CategoryGateway.class);
 
-        Mockito.when(categoryGateway.create(Mockito.any()))
+        when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
         final var useCase = new DefaultCreateCategoryUseCase(categoryGateway);
@@ -38,7 +39,7 @@ public class CreateCategoryUseCaseTest {
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
 
-        Mockito.verify(categoryGateway, Mockito.times(1)).create(Mockito.argThat(aCategory ->
+        Mockito.verify(categoryGateway, times(1)).create(argThat(aCategory ->
                 Objects.equals(expectedName, aCategory.getName()) &&
                         Objects.equals(expectedDescription, aCategory.getDescription()) &&
                         Objects.equals(expectedIsActive, aCategory.isActive()) &&
