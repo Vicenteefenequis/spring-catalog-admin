@@ -133,7 +133,7 @@ public class CategoryMySQLGatewayTest {
 
 
     @Test
-    public void ivenAPrePersistedCategoryAnValidCategoryId_whenCallsFindByID_shouldReturnCategory() {
+    public void givenAPrePersistedCategoryAnValidCategoryId_whenCallsFindByID_shouldReturnCategory() {
         final var expectedName = "Filmes";
         final var expectedDescription = "Filmes";
         final var expectedActive = true;
@@ -160,6 +160,14 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(aCategory.getUpdatedAt(), actualCategory.getUpdatedAt());
         Assertions.assertNull(actualCategory.getDeletedAt());
 
+    }
+
+
+    @Test
+    public void givenValidCategoryIdNotStore_whenCallsFindByID_shouldReturnEmpty() {
+        Assertions.assertEquals(0, categoryRepository.count());
+        final var actualCategory = categoryGateway.findById(CategoryID.from("any_id"));
+        Assertions.assertTrue(actualCategory.isEmpty());
     }
 
 }
