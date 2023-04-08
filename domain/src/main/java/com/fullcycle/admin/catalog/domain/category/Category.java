@@ -5,7 +5,7 @@ import com.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
-public class Category extends AggregateRoot<CategoryID> implements  Cloneable {
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     private String name;
     private String description;
@@ -44,6 +44,18 @@ public class Category extends AggregateRoot<CategoryID> implements  Cloneable {
         return aCategory.clone();
     }
 
+    public static Category with(CategoryID andId, String name, String description, boolean active, Instant createdAt, Instant updatedAt, Instant deletedAt) {
+        return new Category(
+                andId,
+                name,
+                description,
+                active,
+                createdAt,
+                updatedAt,
+                deletedAt
+        );
+    }
+
     @Override
     public void validate(final ValidationHandler handler) {
         new CategoryValidator(this, handler).validate();
@@ -71,13 +83,13 @@ public class Category extends AggregateRoot<CategoryID> implements  Cloneable {
             final boolean isActive
     ) {
 
-        if(isActive) {
+        if (isActive) {
             activate();
         } else {
             deactivate();
         }
         this.name = aName;
-        this.description =aDescription;
+        this.description = aDescription;
         this.updatedAt = Instant.now();
         return this;
     }
