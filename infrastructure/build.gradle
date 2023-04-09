@@ -20,7 +20,8 @@ group = 'com.fullcycle.admin.catalog.infrastructure'
 version = '1.0-SNAPSHOT'
 
 bootJar {
-    archiveFileName = "${rootProject.buildDir}.libs"
+    archiveFileName.set('application.jar')
+    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
 }
 
 repositories {
@@ -39,7 +40,7 @@ dependencies {
 
     implementation('org.springframework.boot:spring-boot-starter-undertow')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-
+    implementation 'io.vavr:vavr:0.10.4'
     testImplementation('org.flywaydb:flyway-core')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 
