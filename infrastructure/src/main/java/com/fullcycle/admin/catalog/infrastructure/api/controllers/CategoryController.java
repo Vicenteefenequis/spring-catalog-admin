@@ -5,9 +5,11 @@ import com.fullcycle.admin.catalog.application.category.create.CreateCategoryOut
 import com.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
 import com.fullcycle.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import com.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.fullcycle.admin.catalog.application.category.retrieve.list.ListCategoriesUseCase;
 import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryCommand;
 import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryOutput;
 import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryUseCase;
+import com.fullcycle.admin.catalog.domain.category.CategorySearchQuery;
 import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.domain.validation.handler.Notification;
 import com.fullcycle.admin.catalog.infrastructure.api.CategoryAPI;
@@ -33,16 +35,20 @@ public class CategoryController implements CategoryAPI {
 
     private final DeleteCategoryUseCase deleteCategoryUseCase;
 
+    private final ListCategoriesUseCase listCategoriesUseCase;
+
     public CategoryController(
             final CreateCategoryUseCase createCategoryUseCase,
             final GetCategoryByIdUseCase getCategoryByIdUseCase,
             final UpdateCategoryUseCase updateCategoryUseCase,
-            final DeleteCategoryUseCase deleteCategoryUseCase
+            final DeleteCategoryUseCase deleteCategoryUseCase,
+            final ListCategoriesUseCase listCategoriesUseCase
     ) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
         this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
+        this.listCategoriesUseCase = Objects.requireNonNull(listCategoriesUseCase);
     }
 
 
@@ -63,8 +69,14 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public Pagination<?> listCategories(String search, int page, int perPage, String sort, String direction) {
-        return null;
+    public Pagination<?> listCategories(
+            final String search,
+            final int page,
+            final int perPage,
+            final String sort,
+            final String direction
+    ) {
+        return listCategoriesUseCase.execute(new CategorySearchQuery(page, perPage, search, sort, direction));
     }
 
     @Override

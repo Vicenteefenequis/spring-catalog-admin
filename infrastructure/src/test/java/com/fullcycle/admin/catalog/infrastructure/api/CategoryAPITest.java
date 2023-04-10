@@ -7,12 +7,15 @@ import com.fullcycle.admin.catalog.application.category.create.CreateCategoryUse
 import com.fullcycle.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import com.fullcycle.admin.catalog.application.category.retrieve.get.CategoryOutput;
 import com.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.fullcycle.admin.catalog.application.category.retrieve.list.CategoryListOutput;
+import com.fullcycle.admin.catalog.application.category.retrieve.list.ListCategoriesUseCase;
 import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryOutput;
 import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryUseCase;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
 import com.fullcycle.admin.catalog.domain.exceptions.NotFoundException;
+import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.domain.validation.Error;
 import com.fullcycle.admin.catalog.domain.validation.handler.Notification;
 import com.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
@@ -24,6 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Objects;
 
 import static io.vavr.API.Left;
@@ -38,26 +42,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ControllerTest(controllers = CategoryAPI.class)
 public class CategoryAPITest {
-
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private ObjectMapper mapper;
-
-
     @MockBean
     private CreateCategoryUseCase createCategoryUseCase;
-
     @MockBean
     private GetCategoryByIdUseCase getCategoryByIdUseCase;
-
     @MockBean
     private UpdateCategoryUseCase updateCategoryUseCase;
-
-
     @MockBean
     private DeleteCategoryUseCase deleteCategoryUseCase;
+    @MockBean
+    private ListCategoriesUseCase listCategoriesUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() throws Exception {
@@ -359,6 +357,61 @@ public class CategoryAPITest {
 
         verify(deleteCategoryUseCase, times(1)).execute(eq(expectedId));
     }
+
+
+    @Test
+    public void givenValidTerm_whenCallsListCategories_shouldReturnCategories() throws Exception {
+        final var aCategory = Category.newCategory("Filmes", "A Categoria mais assistida", true);
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "movies";
+        final var expectedSort = "description";
+        final var expectedDirection = "desc";
+        final var expectedItems = List.of(CategoryListOutput.from(aCategory));
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+
+        when(listCategoriesUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+
+
+        // when
+        final var request = get("/categories")
+                .queryParam("page", String.valueOf(expectedPage))
+                .queryParam("per_page", String.valueOf(expectedPerPage))
+                .queryParam("sort", expectedSort)
+                .queryParam("dir", expectedDirection)
+                .queryParam("search", expectedTerms)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(request).andDo(print());
+
+        //then
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page").value(equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page").value(equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total").value(equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items").value(hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id").value(equalTo(aCategory.getId().getValue())))
+                .andExpect(jsonPath("$.items[0].name").value(equalTo(aCategory.getName())))
+                .andExpect(jsonPath("$.items[0].description").value(equalTo(aCategory.getDescription())))
+                .andExpect(jsonPath("$.items[0].is_active").value(equalTo(aCategory.isActive())))
+                .andExpect(jsonPath("$.items[0].created_at").value(equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.items[0].updated_at").value(equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(jsonPath("$.items[0].deleted_at").value(equalTo(aCategory.getDeletedAt())));
+
+        verify(listCategoriesUseCase, times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedPage, cmd.page()) &&
+                        Objects.equals(expectedPerPage, cmd.perPage()) &&
+                        Objects.equals(expectedSort, cmd.sort()) &&
+                        Objects.equals(expectedDirection, cmd.direction()) &&
+                        Objects.equals(expectedTerms, cmd.terms())
+        ));
+    }
+
+
 
 
 }
