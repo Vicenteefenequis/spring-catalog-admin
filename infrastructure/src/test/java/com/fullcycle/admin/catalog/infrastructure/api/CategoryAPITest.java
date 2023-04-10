@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalog.application.category.create.CreateCategoryOut
 import com.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
 import com.fullcycle.admin.catalog.application.category.retrieve.get.CategoryOutput;
 import com.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryOutput;
 import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryUseCase;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
@@ -226,9 +227,8 @@ public class CategoryAPITest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
 
-        when(getCategoryByIdUseCase.execute(any()))
-                .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
-
+        when(updateCategoryUseCase.execute(any()))
+                .thenReturn(Right(UpdateCategoryOutput.from("123")));
 
         final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
 
@@ -284,6 +284,45 @@ public class CategoryAPITest {
         response.andExpect(status().isNotFound())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.message").value(equalTo(expectedErrorMessage)));
+
+
+        verify(updateCategoryUseCase, times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedName, cmd.name()) &&
+                        Objects.equals(expectedDescription, cmd.description()) &&
+                        Objects.equals(expectedIsActive, cmd.isActive())
+        ));
+    }
+
+
+    @Test
+    public void givenAInvalidName_whenCallsUpdateCategory_thenShouldReturnDomainException() throws Exception {
+        //given
+        final var expectedId = "123";
+        final var expectedName = "filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var expectedErrorMessage = "'name' should not be null";
+
+
+        when(updateCategoryUseCase.execute(any()))
+                .thenReturn(Left(Notification.create(new Error(expectedErrorMessage))));
+
+
+        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+
+        // when
+        final var request = put("/categories/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(aCommand));
+
+        final var response = this.mvc.perform(request).andDo(print());
+
+        //then
+
+        response.andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors[0].message").value(equalTo(expectedErrorMessage)));
 
 
         verify(updateCategoryUseCase, times(1)).execute(argThat(cmd ->
