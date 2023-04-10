@@ -3,8 +3,7 @@ package com.fullcycle.admin.catalog.application.category.update;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
-import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
-import com.fullcycle.admin.catalog.domain.validation.Error;
+import com.fullcycle.admin.catalog.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalog.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
@@ -35,17 +34,17 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
         final var notification = Notification.create();
 
         aCategory
-                .update(aName,aDescription,isActive)
+                .update(aName, aDescription, isActive)
                 .validate(notification);
         return notification.hasError() ? Left(notification) : update(aCategory);
     }
 
     private Either<Notification, UpdateCategoryOutput> update(final Category aCategory) {
-        return Try(() -> this.categoryGateway.update(aCategory)).toEither().bimap(Notification::create,UpdateCategoryOutput::from);
+        return Try(() -> this.categoryGateway.update(aCategory)).toEither().bimap(Notification::create, UpdateCategoryOutput::from);
     }
 
-    private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> DomainException.with(new Error("Category with ID %s was  not found".formatted(anId.getValue())));
+    private static Supplier<NotFoundException> notFound(final CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 
 
