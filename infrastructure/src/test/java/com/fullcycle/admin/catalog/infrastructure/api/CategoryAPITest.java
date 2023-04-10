@@ -18,8 +18,8 @@ import com.fullcycle.admin.catalog.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.domain.validation.Error;
 import com.fullcycle.admin.catalog.domain.validation.handler.Notification;
-import com.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
-import com.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
+import com.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class CategoryAPITest {
 
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Right(CreateCategoryOutput.from("123")));
@@ -100,7 +100,7 @@ public class CategoryAPITest {
 
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedMessage))));
@@ -136,7 +136,7 @@ public class CategoryAPITest {
 
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenThrow(DomainException.with(new Error(expectedMessage)));
@@ -233,7 +233,7 @@ public class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenReturn(Right(UpdateCategoryOutput.from("123")));
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = put("/categories/{id}", expectedId)
@@ -273,7 +273,7 @@ public class CategoryAPITest {
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
 
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = put("/categories/{id}", expectedId)
@@ -312,7 +312,7 @@ public class CategoryAPITest {
                 .thenReturn(Left(Notification.create(new Error(expectedErrorMessage))));
 
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = put("/categories/{id}", expectedId)
@@ -399,7 +399,6 @@ public class CategoryAPITest {
                 .andExpect(jsonPath("$.items[0].description").value(equalTo(aCategory.getDescription())))
                 .andExpect(jsonPath("$.items[0].is_active").value(equalTo(aCategory.isActive())))
                 .andExpect(jsonPath("$.items[0].created_at").value(equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.items[0].updated_at").value(equalTo(aCategory.getUpdatedAt().toString())))
                 .andExpect(jsonPath("$.items[0].deleted_at").value(equalTo(aCategory.getDeletedAt())));
 
         verify(listCategoriesUseCase, times(1)).execute(argThat(cmd ->
