@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcycle.admin.catalog.ControllerTest;
 import com.fullcycle.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
+import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
+import com.fullcycle.admin.catalog.domain.validation.Error;
+import com.fullcycle.admin.catalog.domain.validation.handler.Notification;
 import com.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,8 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Objects;
 
+import static io.vavr.API.Left;
 import static io.vavr.API.Right;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,6 +62,79 @@ public class CategoryAPITest {
                 .andExpect(header().string("Location", "/categories/123"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id").value(equalTo("123")));
+
+
+        Mockito.verify(createCategoryUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedName, cmd.name()) &&
+                        Objects.equals(expectedDescription, cmd.description()) &&
+                        Objects.equals(expectedIsActive, cmd.isActive())
+        ));
+
+    }
+
+
+    @Test
+    public void givenAInvalidName_whenCallsCreateCategory_thenShouldReturnNotification() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedMessage = "'name' should not be null";
+        final var expectedIsActive = true;
+
+
+        final var aInput =
+                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+
+        Mockito.when(createCategoryUseCase.execute(any()))
+                .thenReturn(Left(Notification.create(new Error(expectedMessage))));
+
+        final var request = post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Location", nullValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors").value(hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message").value(equalTo(expectedMessage)));
+
+
+        Mockito.verify(createCategoryUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedName, cmd.name()) &&
+                        Objects.equals(expectedDescription, cmd.description()) &&
+                        Objects.equals(expectedIsActive, cmd.isActive())
+        ));
+
+    }
+
+
+    @Test
+    public void givenAInvalidCommand_whenCallsCreateCategory_thenShouldReturnDomainException() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedMessage = "'name' should not be null";
+        final var expectedIsActive = true;
+
+
+        final var aInput =
+                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+
+        Mockito.when(createCategoryUseCase.execute(any()))
+                .thenThrow(DomainException.with(new Error(expectedMessage)));
+
+        final var request = post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Location", nullValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message").value(equalTo(expectedMessage)))
+                .andExpect(jsonPath("$.errors").value(hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message").value(equalTo(expectedMessage)));
 
 
         Mockito.verify(createCategoryUseCase, Mockito.times(1)).execute(argThat(cmd ->
