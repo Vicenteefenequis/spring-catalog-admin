@@ -2,7 +2,9 @@ package com.fullcycle.admin.catalog.domain.genre;
 
 import com.fullcycle.admin.catalog.domain.AggregateRoot;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.validation.ValidationHandler;
+import com.fullcycle.admin.catalog.domain.validation.handler.Notification;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,6 +37,13 @@ public class Genre extends AggregateRoot<GenreID> {
         this.createdAt = aCreatedAt;
         this.updatedAt = aUpdatedAt;
         this.deletedAt = aDeletedAt;
+
+        final var notification = Notification.create();
+        validate(notification);
+
+        if(notification.hasError()) {
+            throw new NotificationException("",notification);
+        }
     }
 
     public static Genre newGenre(final String aName, final boolean isActive) {
@@ -87,6 +96,7 @@ public class Genre extends AggregateRoot<GenreID> {
 
     @Override
     public void validate(final ValidationHandler handler) {
+        new GenreValidator(this,handler).validate();
     }
 
 

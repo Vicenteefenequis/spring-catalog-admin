@@ -1,8 +1,7 @@
 package com.fullcycle.admin.catalog.domain.genre;
 
 
-import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
-import com.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
+import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -39,10 +38,9 @@ public class GenreTest {
         final var expectedErrorMessage = "'name' should not be null";
 
         // when
-        final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> {
-            actualGenre.validate(new ThrowsValidationHandler());
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+           Genre.newGenre(expectedName, expectedIsActive);
         });
 
         // then
@@ -61,11 +59,12 @@ public class GenreTest {
         final var expectedErrorMessage = "'name' should not be empty";
 
         // when
-        final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> {
-            actualGenre.validate(new ThrowsValidationHandler());
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            Genre.newGenre(expectedName, expectedIsActive);
         });
+
 
         // then
 
@@ -84,14 +83,14 @@ public class GenreTest {
                 "nisl lacinia nisl, eget ultricies nisl nisl eget nisl. Donec auctor";
         final var expectedIsActive = false;
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' must be between 1 and 255 characters";
+        final var expectedErrorMessage = "'name' must be between 1 and 255 characteres";
 
         // when
-        final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> {
-            actualGenre.validate(new ThrowsValidationHandler());
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            Genre.newGenre(expectedName, expectedIsActive);
         });
+
 
         // then
 
