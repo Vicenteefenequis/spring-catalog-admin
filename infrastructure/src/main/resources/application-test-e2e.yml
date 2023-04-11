@@ -1,0 +1,11 @@
+logging:
+  level:
+    ROOT: info
+mysql:
+  username: root
+  password: root
+  schema: admin_video
+  url: localhost:${mysql.port}
+
+
+
