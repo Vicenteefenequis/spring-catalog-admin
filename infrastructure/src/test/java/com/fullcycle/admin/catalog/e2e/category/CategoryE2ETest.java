@@ -199,11 +199,11 @@ public class CategoryE2ETest {
         final var aRequest = put("/categories/" + actualId.getValue())
                 .contentType(MediaType.APPLICATION_JSON).content(Json.writeValueAsString(aRequestBody));
 
-       this.mvc.perform(aRequest)
-               .andExpect(status().isOk());
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk());
 
 
-       final var actualCategory = categoryRepository.findById(actualId.getValue()).get();
+        final var actualCategory = categoryRepository.findById(actualId.getValue()).get();
 
 
         Assertions.assertEquals(expectedName, actualCategory.getName());
@@ -277,6 +277,20 @@ public class CategoryE2ETest {
         Assertions.assertNull(actualCategory.getDeletedAt());
     }
 
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToDeleteACategoryByIdentifier() throws Exception {
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var actualId = givenACategory("Filmes", null, true);
+
+        this.mvc.perform(delete("/categories/" + actualId.getValue())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertFalse(this.categoryRepository.existsById(actualId.getValue()));
+
+    }
 
 
     private ResultActions listCategories(final int page, final int perPage, final String search) throws Exception {
