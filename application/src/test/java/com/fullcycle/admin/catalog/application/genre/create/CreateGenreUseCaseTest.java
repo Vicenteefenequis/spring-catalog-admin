@@ -1,16 +1,15 @@
 package com.fullcycle.admin.catalog.application.genre.create;
 
 
+import com.fullcycle.admin.catalog.application.UseCaseTest;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,8 +18,7 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class CreateGenreUseCaseTest {
+public class CreateGenreUseCaseTest extends UseCaseTest {
 
     @InjectMocks
     private DefaultCreateGenreUseCase useCase;
@@ -29,6 +27,12 @@ public class CreateGenreUseCaseTest {
     private CategoryGateway categoryGateway;
     @Mock
     private GenreGateway genreGateway;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway, genreGateway);
+    }
+
 
     @Test
     public void givenAValidCommand_whenCallsCreateGenre_shouldReturnGenreId() {
@@ -40,8 +44,7 @@ public class CreateGenreUseCaseTest {
 
         final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
 
-        when(genreGateway.create(any()))
-                .thenAnswer(returnsFirstArg());
+        when(genreGateway.create(any())).thenAnswer(returnsFirstArg());
 
         // when
         final var actualOutput = useCase.execute(aCommand);
@@ -50,15 +53,7 @@ public class CreateGenreUseCaseTest {
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
 
-        verify(genreGateway, times(1)).create(argThat(genre ->
-                Objects.equals(expectedName, genre.getName()) &&
-                        Objects.equals(expectedIsActive, genre.isActive()) &&
-                        Objects.equals(expectedCategories, genre.getCategories()) &&
-                        Objects.nonNull(genre.getId()) &&
-                        Objects.nonNull(genre.getCreatedAt()) &&
-                        Objects.nonNull(genre.getUpdatedAt()) &&
-                        Objects.isNull(genre.getDeletedAt())
-        ));
+        verify(genreGateway, times(1)).create(argThat(genre -> Objects.equals(expectedName, genre.getName()) && Objects.equals(expectedIsActive, genre.isActive()) && Objects.equals(expectedCategories, genre.getCategories()) && Objects.nonNull(genre.getId()) && Objects.nonNull(genre.getCreatedAt()) && Objects.nonNull(genre.getUpdatedAt()) && Objects.isNull(genre.getDeletedAt())));
     }
 
 
@@ -72,8 +67,7 @@ public class CreateGenreUseCaseTest {
 
         final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
 
-        when(genreGateway.create(any()))
-                .thenAnswer(returnsFirstArg());
+        when(genreGateway.create(any())).thenAnswer(returnsFirstArg());
 
         // when
         final var actualOutput = useCase.execute(aCommand);
@@ -82,15 +76,7 @@ public class CreateGenreUseCaseTest {
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
 
-        verify(genreGateway, times(1)).create(argThat(genre ->
-                Objects.equals(expectedName, genre.getName()) &&
-                        Objects.equals(expectedIsActive, genre.isActive()) &&
-                        Objects.equals(expectedCategories, genre.getCategories()) &&
-                        Objects.nonNull(genre.getId()) &&
-                        Objects.nonNull(genre.getCreatedAt()) &&
-                        Objects.nonNull(genre.getUpdatedAt()) &&
-                        Objects.nonNull(genre.getDeletedAt())
-        ));
+        verify(genreGateway, times(1)).create(argThat(genre -> Objects.equals(expectedName, genre.getName()) && Objects.equals(expectedIsActive, genre.isActive()) && Objects.equals(expectedCategories, genre.getCategories()) && Objects.nonNull(genre.getId()) && Objects.nonNull(genre.getCreatedAt()) && Objects.nonNull(genre.getUpdatedAt()) && Objects.nonNull(genre.getDeletedAt())));
     }
 
     @Test
@@ -98,19 +84,14 @@ public class CreateGenreUseCaseTest {
         //given
         final var expectedName = "Ação";
         final var expectedIsActive = true;
-        final var expectedCategories = List.of(
-                CategoryID.from("123"),
-                CategoryID.from("456")
-        );
+        final var expectedCategories = List.of(CategoryID.from("123"), CategoryID.from("456"));
 
 
         final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
 
-        when(categoryGateway.existsById(any()))
-                .thenReturn(expectedCategories);
+        when(categoryGateway.existsById(any())).thenReturn(expectedCategories);
 
-        when(genreGateway.create(any()))
-                .thenAnswer(returnsFirstArg());
+        when(genreGateway.create(any())).thenAnswer(returnsFirstArg());
 
 
         // when
@@ -123,15 +104,7 @@ public class CreateGenreUseCaseTest {
         verify(categoryGateway, times(1)).existsById(expectedCategories);
 
 
-        verify(genreGateway, times(1)).create(argThat(genre ->
-                Objects.equals(expectedName, genre.getName()) &&
-                        Objects.equals(expectedIsActive, genre.isActive()) &&
-                        Objects.equals(expectedCategories, genre.getCategories()) &&
-                        Objects.nonNull(genre.getId()) &&
-                        Objects.nonNull(genre.getCreatedAt()) &&
-                        Objects.nonNull(genre.getUpdatedAt()) &&
-                        Objects.isNull(genre.getDeletedAt())
-        ));
+        verify(genreGateway, times(1)).create(argThat(genre -> Objects.equals(expectedName, genre.getName()) && Objects.equals(expectedIsActive, genre.isActive()) && Objects.equals(expectedCategories, genre.getCategories()) && Objects.nonNull(genre.getId()) && Objects.nonNull(genre.getCreatedAt()) && Objects.nonNull(genre.getUpdatedAt()) && Objects.isNull(genre.getDeletedAt())));
 
     }
 
@@ -195,17 +168,12 @@ public class CreateGenreUseCaseTest {
 
         final var expectedName = "Ação";
         final var expectedIsActive = true;
-        final var expectedCategories = List.of(
-                filmes,
-                series,
-                documentarios
-        );
+        final var expectedCategories = List.of(filmes, series, documentarios);
 
         final var expectedErrorMessage = "Some categories could not be found: 456, 789";
         final var expectedErrorCount = 1;
 
-        when(categoryGateway.existsById(any()))
-                .thenReturn(List.of(filmes));
+        when(categoryGateway.existsById(any())).thenReturn(List.of(filmes));
 
         final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
 
@@ -232,18 +200,13 @@ public class CreateGenreUseCaseTest {
 
         final var expectedName = " ";
         final var expectedIsActive = true;
-        final var expectedCategories = List.of(
-                filmes,
-                series,
-                documentarios
-        );
+        final var expectedCategories = List.of(filmes, series, documentarios);
 
         final var expectedErrorMessageOne = "Some categories could not be found: 456, 789";
         final var expectedErrorMessageTwo = "'name' should not be empty";
         final var expectedErrorCount = 2;
 
-        when(categoryGateway.existsById(any()))
-                .thenReturn(List.of(filmes));
+        when(categoryGateway.existsById(any())).thenReturn(List.of(filmes));
 
         final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
 
@@ -262,7 +225,6 @@ public class CreateGenreUseCaseTest {
     }
 
     private List<String> asString(List<CategoryID> categories) {
-        return categories.stream().map(CategoryID::getValue)
-                .toList();
+        return categories.stream().map(CategoryID::getValue).toList();
     }
 }
