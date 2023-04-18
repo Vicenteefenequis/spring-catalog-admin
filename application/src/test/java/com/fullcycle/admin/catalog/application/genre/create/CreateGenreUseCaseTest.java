@@ -61,6 +61,38 @@ public class CreateGenreUseCaseTest {
         ));
     }
 
+
+    @Test
+    public void givenAValidCommandWithInactiveGenre_whenCallsCreateGenre_shouldReturnGenreId() {
+        //given
+        final var expectedName = "Ação";
+        final var expectedIsActive = false;
+        final var expectedCategories = List.<CategoryID>of();
+
+
+        final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
+
+        when(genreGateway.create(any()))
+                .thenAnswer(returnsFirstArg());
+
+        // when
+        final var actualOutput = useCase.execute(aCommand);
+
+        //then
+        Assertions.assertNotNull(actualOutput);
+        Assertions.assertNotNull(actualOutput.id());
+
+        verify(genreGateway, times(1)).create(argThat(genre ->
+                Objects.equals(expectedName, genre.getName()) &&
+                        Objects.equals(expectedIsActive, genre.isActive()) &&
+                        Objects.equals(expectedCategories, genre.getCategories()) &&
+                        Objects.nonNull(genre.getId()) &&
+                        Objects.nonNull(genre.getCreatedAt()) &&
+                        Objects.nonNull(genre.getUpdatedAt()) &&
+                        Objects.nonNull(genre.getDeletedAt())
+        ));
+    }
+
     @Test
     public void givenAValidCommandWithCategories_whenCallsCreateGenre_shouldReturnGenreId() {
         //given
