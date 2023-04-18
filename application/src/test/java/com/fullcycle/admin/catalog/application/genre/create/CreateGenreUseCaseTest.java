@@ -128,6 +128,32 @@ public class CreateGenreUseCaseTest {
 
     }
 
+
+    @Test
+    public void givenAInvalidNullName_whenCallsCreateCategory_shouldReturnDomainException() {
+        //given
+        final String expectedName = null;
+        final var expectedIsActive = true;
+        final var expectedCategories = List.<CategoryID>of();
+
+        final var expectedErrorMessage = "'name' should not be null";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
+
+
+        // when
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> useCase.execute(aCommand));
+
+        //then
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).create(any());
+
+    }
+
     private List<String> asString(List<CategoryID> categories) {
         return categories.stream().map(CategoryID::getValue)
                 .toList();
