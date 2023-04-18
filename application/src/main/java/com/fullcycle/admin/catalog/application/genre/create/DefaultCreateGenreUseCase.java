@@ -39,7 +39,7 @@ public class DefaultCreateGenreUseCase extends CreateGenreUseCase {
         final var aGenre = notification.validate(() -> Genre.newGenre(aName, aIsActive));
 
         if (notification.hasError()) {
-            throw new NotificationException("", notification);
+            throw new NotificationException("Could not create Aggregate Genre", notification);
         }
 
 
