@@ -60,6 +60,48 @@ public class CreateGenreUseCaseTest {
         ));
     }
 
+    @Test
+    public void givenAValidCommandWithCategories_whenCallsCreateGenre_shouldReturnGenreId() {
+        //given
+        final var expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(
+                CategoryID.from("123"),
+                CategoryID.from("456")
+        );
+
+
+        final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
+
+        when(categoryGateway.existsById(any()))
+                .thenReturn(expectedCategories);
+
+        when(genreGateway.create(any()))
+                .thenAnswer(returnsFirstArg());
+
+
+        // when
+        final var actualOutput = useCase.execute(aCommand);
+
+        //then
+        Assertions.assertNotNull(actualOutput);
+        Assertions.assertNotNull(actualOutput.id());
+
+        verify(categoryGateway, times(1)).existsById(expectedCategories);
+
+
+        verify(genreGateway, times(1)).create(argThat(genre ->
+                Objects.equals(expectedName, genre.getName()) &&
+                        Objects.equals(expectedIsActive, genre.isActive()) &&
+                        Objects.equals(expectedCategories, genre.getCategories()) &&
+                        Objects.nonNull(genre.getId()) &&
+                        Objects.nonNull(genre.getCreatedAt()) &&
+                        Objects.nonNull(genre.getUpdatedAt()) &&
+                        Objects.isNull(genre.getDeletedAt())
+        ));
+
+    }
+
     private List<String> asString(List<CategoryID> categories) {
         return categories.stream().map(CategoryID::getValue)
                 .toList();
