@@ -71,6 +71,54 @@ public class UpdateGenreUseCaseTest {
     }
 
 
+    @Test
+    public void givenAValidCommandWithCategories_whenCallsUpdateGenre_shouldReturnGenreId() {
+        //given
+        final var aGenre = Genre.newGenre("Acao", true);
+        final var expectedId = aGenre.getId();
+
+        final var expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(
+                CategoryID.from("123"),
+                CategoryID.from("456")
+        );
+
+        final var aCommand = UpdateGenreCommand.with(expectedId.getValue(), expectedName, expectedIsActive, asString(expectedCategories));
+
+        when(genreGateway.findById(any()))
+                .thenReturn(Optional.of(Genre.with(aGenre)));
+
+        when(categoryGateway.existsById(any()))
+                .thenReturn(expectedCategories);
+
+        when(genreGateway.update(any()))
+                .thenAnswer(returnsFirstArg());
+
+        //when
+        final var actualOutput = useCase.execute(aCommand);
+        //then
+        Assertions.assertNotNull(actualOutput);
+        Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
+
+
+        verify(genreGateway, times(1)).findById(eq(expectedId));
+
+        verify(categoryGateway, times(1)).existsById(eq(expectedCategories));
+
+        verify(genreGateway, times(1)).update(argThat(aUpdateGenre ->
+                Objects.equals(expectedId, aUpdateGenre.getId())
+                        && Objects.equals(expectedName, aUpdateGenre.getName())
+                        && Objects.equals(expectedIsActive, aUpdateGenre.isActive())
+                        && Objects.equals(expectedCategories, aUpdateGenre.getCategories())
+                        && Objects.equals(aGenre.getCreatedAt(), aUpdateGenre.getCreatedAt())
+                        && aGenre.getUpdatedAt().isBefore(aUpdateGenre.getUpdatedAt())
+                        && Objects.isNull(aUpdateGenre.getDeletedAt())
+
+        ));
+    }
+
+
     private List<String> asString(final List<CategoryID> ids) {
         return ids.stream().map(CategoryID::getValue).toList();
     }
