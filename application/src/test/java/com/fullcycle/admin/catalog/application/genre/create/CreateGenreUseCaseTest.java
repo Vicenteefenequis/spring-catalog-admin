@@ -190,6 +190,45 @@ public class CreateGenreUseCaseTest {
 
     }
 
+
+    @Test
+    public void givenAInvalidName_whenCallsCreateGenreAndSomeCategoriesDoesNotExists_shouldReturnDomainException() {
+        //given
+        final var filmes = CategoryID.from("123");
+        final var series = CategoryID.from("456");
+        final var documentarios = CategoryID.from("789");
+
+        final var expectedName = " ";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(
+                filmes,
+                series,
+                documentarios
+        );
+
+        final var expectedErrorMessageOne = "Some categories could not be found: 456, 789";
+        final var expectedErrorMessageTwo = "'name' should not be empty";
+        final var expectedErrorCount = 2;
+
+        when(categoryGateway.existsById(any()))
+                .thenReturn(List.of(filmes));
+
+        final var aCommand = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
+
+
+        // when
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> useCase.execute(aCommand));
+
+        //then
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessageOne, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessageTwo, actualException.getErrors().get(1).message());
+
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(genreGateway, times(0)).create(any());
+
+    }
+
     private List<String> asString(List<CategoryID> categories) {
         return categories.stream().map(CategoryID::getValue)
                 .toList();
