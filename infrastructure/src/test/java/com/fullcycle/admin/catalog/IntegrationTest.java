@@ -3,7 +3,6 @@ package com.fullcycle.admin.catalog;
 import com.fullcycle.admin.catalog.infrastructure.configuration.WebServerConfig;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.lang.annotation.*;
@@ -12,7 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("test-integration")
-@ComponentScan(basePackages = "com.fullcycle.admin.catalog")
 @SpringBootTest(classes = WebServerConfig.class)
 @ExtendWith(MySQLCleanUpExtension.class)
 public @interface IntegrationTest {
