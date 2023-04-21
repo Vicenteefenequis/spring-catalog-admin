@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalog.infrastructure.category.presenters;
+package com.fullcycle.admin.catalog.infrastructure.genre.presenters;
 
 import com.fullcycle.admin.catalog.application.genre.retrieve.get.GenreOutput;
 import com.fullcycle.admin.catalog.application.genre.retrieve.list.GenreListOutput;
