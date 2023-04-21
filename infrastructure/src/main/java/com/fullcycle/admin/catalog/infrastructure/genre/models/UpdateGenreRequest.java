@@ -8,7 +8,7 @@ import java.util.List;
 
 public record UpdateGenreRequest(
         @JsonProperty("name") String name,
-        @JsonProperty("categories_ids") List<String> categories,
+        @JsonProperty("categories_id") List<String> categories,
         @JsonProperty("is_active") Boolean active
 ) {
     public List<String> categories() {

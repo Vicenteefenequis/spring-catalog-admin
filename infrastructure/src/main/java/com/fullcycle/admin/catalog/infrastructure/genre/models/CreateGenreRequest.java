@@ -7,7 +7,7 @@ import java.util.List;
 
 public record CreateGenreRequest(
         @JsonProperty("name") String name,
-        @JsonProperty("categories_ids") List<String> categories,
+        @JsonProperty("categories_id") List<String> categories,
         @JsonProperty("is_active") Boolean active
 ) {
 
