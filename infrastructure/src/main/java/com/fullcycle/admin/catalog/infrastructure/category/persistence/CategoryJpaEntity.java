@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Entity
+@Entity(name = "Category")
 @Table(name = "category")
 public class CategoryJpaEntity {
     @Id
@@ -77,7 +77,6 @@ public class CategoryJpaEntity {
                 getDeletedAt()
         );
     }
-
 
 
     public String getId() {
