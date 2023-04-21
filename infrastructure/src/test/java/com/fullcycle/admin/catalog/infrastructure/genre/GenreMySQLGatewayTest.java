@@ -4,6 +4,7 @@ import com.fullcycle.admin.catalog.MySQLGatewayTest;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.Genre;
+import com.fullcycle.admin.catalog.domain.genre.GenreID;
 import com.fullcycle.admin.catalog.infrastructure.category.CategoryMySQLGateway;
 import com.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
@@ -279,6 +280,29 @@ public class GenreMySQLGatewayTest {
         Assertions.assertEquals(aGenre.getCreatedAt(), persistedGenre.getCreatedAt());
         Assertions.assertTrue(aGenre.getUpdatedAt().isBefore(persistedGenre.getUpdatedAt()));
         Assertions.assertNotNull(persistedGenre.getDeletedAt());
+    }
+
+    @Test
+    public void givenAPrePersistedGenre_whenCallsDeleteById_shouldDeleteGenre() {
+        final var aGenre = Genre.newGenre("Ação", true);
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        Assertions.assertEquals(1, genreRepository.count());
+
+        genreMySQLGateway.deleteById(aGenre.getId());
+
+        Assertions.assertEquals(0, genreRepository.count());
+    }
+
+
+    @Test
+    public void givenAnInvalidGenre_whenCallsDeleteById_shouldReturnOK() {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        genreMySQLGateway.deleteById(GenreID.from("123"));
+
+        Assertions.assertEquals(0, genreRepository.count());
     }
 
 
