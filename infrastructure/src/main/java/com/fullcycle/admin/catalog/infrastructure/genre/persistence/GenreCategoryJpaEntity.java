@@ -36,7 +36,7 @@ public class GenreCategoryJpaEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GenreCategoryJpaEntity that = (GenreCategoryJpaEntity) o;
-        return Objects.equals(id, that.getId());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override

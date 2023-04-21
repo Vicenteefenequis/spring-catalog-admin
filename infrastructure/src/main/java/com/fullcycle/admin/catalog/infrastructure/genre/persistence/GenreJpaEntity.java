@@ -4,12 +4,10 @@ import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.Genre;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -18,6 +16,7 @@ import static javax.persistence.FetchType.EAGER;
 @Entity
 @Table(name = "genres")
 public class GenreJpaEntity {
+    @Id
     @Column(name = "id", nullable = false)
     private String id;
     @Column(name = "name", nullable = false)
@@ -73,11 +72,15 @@ public class GenreJpaEntity {
                 GenreID.from(getId()),
                 getName(),
                 isActive(),
-                getCategories().stream().map(it -> CategoryID.from(it.getId().getCategoryId())).toList(),
+                getCategoriesIDs(),
                 getCreatedAt(),
                 getUpdatedAt(),
                 getDeletedAt()
         );
+    }
+
+    public List<CategoryID> getCategoriesIDs() {
+        return getCategories().stream().map(it -> CategoryID.from(it.getId().getCategoryId())).toList();
     }
 
     private void addCategory(final CategoryID anId) {
