@@ -3,6 +3,7 @@ package com.fullcycle.admin.catalog.e2e.genre;
 import com.fullcycle.admin.catalog.E2ETest;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.e2e.MockDsl;
+import com.fullcycle.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import com.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -101,39 +102,16 @@ public class GenreE2ETest implements MockDsl {
         givenAGenre("Esportes", true, List.of());
         givenAGenre("Drama", true, List.of());
 
-        listGenres(0, 1)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.current_page").value(0))
-                .andExpect(jsonPath("$.per_page").value(1))
-                .andExpect(jsonPath("$.total").value(3))
-                .andExpect(jsonPath("$.items.length()").value(1))
-                .andExpect(jsonPath("$.items[0].name").value("Ação"));
+        listGenres(0, 1).andExpect(status().isOk()).andExpect(jsonPath("$.current_page").value(0)).andExpect(jsonPath("$.per_page").value(1)).andExpect(jsonPath("$.total").value(3)).andExpect(jsonPath("$.items.length()").value(1)).andExpect(jsonPath("$.items[0].name").value("Ação"));
 
 
-        listGenres(1, 1)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.current_page").value(1))
-                .andExpect(jsonPath("$.per_page").value(1))
-                .andExpect(jsonPath("$.total").value(3))
-                .andExpect(jsonPath("$.items.length()").value(1))
-                .andExpect(jsonPath("$.items[0].name").value("Drama"));
+        listGenres(1, 1).andExpect(status().isOk()).andExpect(jsonPath("$.current_page").value(1)).andExpect(jsonPath("$.per_page").value(1)).andExpect(jsonPath("$.total").value(3)).andExpect(jsonPath("$.items.length()").value(1)).andExpect(jsonPath("$.items[0].name").value("Drama"));
 
 
-        listGenres(2, 1)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.current_page").value(2))
-                .andExpect(jsonPath("$.per_page").value(1))
-                .andExpect(jsonPath("$.total").value(3))
-                .andExpect(jsonPath("$.items.length()").value(1))
-                .andExpect(jsonPath("$.items[0].name").value("Esportes"));
+        listGenres(2, 1).andExpect(status().isOk()).andExpect(jsonPath("$.current_page").value(2)).andExpect(jsonPath("$.per_page").value(1)).andExpect(jsonPath("$.total").value(3)).andExpect(jsonPath("$.items.length()").value(1)).andExpect(jsonPath("$.items[0].name").value("Esportes"));
 
 
-        listGenres(3, 1)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.current_page").value(3))
-                .andExpect(jsonPath("$.per_page").value(1))
-                .andExpect(jsonPath("$.total").value(3))
-                .andExpect(jsonPath("$.items.length()").value(0));
+        listGenres(3, 1).andExpect(status().isOk()).andExpect(jsonPath("$.current_page").value(3)).andExpect(jsonPath("$.per_page").value(1)).andExpect(jsonPath("$.total").value(3)).andExpect(jsonPath("$.items.length()").value(0));
     }
 
 
@@ -145,13 +123,7 @@ public class GenreE2ETest implements MockDsl {
         givenAGenre("Esportes", true, List.of());
         givenAGenre("Drama", true, List.of());
 
-        listGenres(0, 1, "dra")
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.current_page").value(0))
-                .andExpect(jsonPath("$.per_page").value(1))
-                .andExpect(jsonPath("$.total").value(1))
-                .andExpect(jsonPath("$.items.length()").value(1))
-                .andExpect(jsonPath("$.items[0].name").value("Drama"));
+        listGenres(0, 1, "dra").andExpect(status().isOk()).andExpect(jsonPath("$.current_page").value(0)).andExpect(jsonPath("$.per_page").value(1)).andExpect(jsonPath("$.total").value(1)).andExpect(jsonPath("$.items.length()").value(1)).andExpect(jsonPath("$.items[0].name").value("Drama"));
     }
 
 
@@ -165,15 +137,7 @@ public class GenreE2ETest implements MockDsl {
         givenAGenre("Drama", true, List.of());
 
 
-        listGenres(0, 3, "", "name", "desc")
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.current_page").value(0))
-                .andExpect(jsonPath("$.per_page").value(3))
-                .andExpect(jsonPath("$.total").value(3))
-                .andExpect(jsonPath("$.items.length()").value(3))
-                .andExpect(jsonPath("$.items[0].name").value("Esportes"))
-                .andExpect(jsonPath("$.items[1].name").value("Drama"))
-                .andExpect(jsonPath("$.items[2].name").value("Ação"));
+        listGenres(0, 3, "", "name", "desc").andExpect(status().isOk()).andExpect(jsonPath("$.current_page").value(0)).andExpect(jsonPath("$.per_page").value(3)).andExpect(jsonPath("$.total").value(3)).andExpect(jsonPath("$.items.length()").value(3)).andExpect(jsonPath("$.items[0].name").value("Esportes")).andExpect(jsonPath("$.items[1].name").value("Drama")).andExpect(jsonPath("$.items[2].name").value("Ação"));
     }
 
 
@@ -192,9 +156,7 @@ public class GenreE2ETest implements MockDsl {
         final var actualGenre = retrieveAGenre(actualId);
 
         Assertions.assertEquals(expectedName, actualGenre.name());
-        Assertions.assertTrue(
-                expectedCategories.size() == actualGenre.categories().size() && mapTo(expectedCategories,CategoryID::getValue).containsAll(actualGenre.categories())
-        );
+        Assertions.assertTrue(expectedCategories.size() == actualGenre.categories().size() && mapTo(expectedCategories, CategoryID::getValue).containsAll(actualGenre.categories()));
         Assertions.assertEquals(expectedIsActive, actualGenre.active());
         Assertions.assertNotNull(actualGenre.createdAt());
         Assertions.assertNotNull(actualGenre.updatedAt());
@@ -203,17 +165,104 @@ public class GenreE2ETest implements MockDsl {
 
 
     @Test
-    public void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByGettingANotFoundCategory() throws Exception {
+    public void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByGettingANotFoundGenre() throws Exception {
 
         final var aRequest = get("/genres/123").contentType(MediaType.APPLICATION_JSON);
 
-        this.mvc.perform(aRequest).andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Genre with ID 123 was not found"));
+        this.mvc.perform(aRequest).andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value("Genre with ID 123 was not found"));
 
     }
 
+    @Test
+    public void asACatalogAdminIShouldBeToUpdateAGenreByItsIdentifier() throws Exception {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        final var filmes = givenACategory("Filmes", null, true);
+        final var expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(filmes);
+
+        final var actualId = givenAGenre("acao", expectedIsActive, expectedCategories);
 
 
+        final var aRequestBody = new UpdateGenreRequest(expectedName, mapTo(expectedCategories, CategoryID::getValue), expectedIsActive);
+
+        updateAGenre(actualId, aRequestBody).andExpect(status().isOk());
+
+
+        final var actualGenre = genreRepository.findById(actualId.getValue()).get();
+
+
+        Assertions.assertEquals(expectedName, actualGenre.getName());
+        Assertions.assertTrue(
+                expectedCategories.size() == actualGenre.getCategoriesIDs().size() &&
+                        expectedCategories.containsAll(actualGenre.getCategoriesIDs())
+        );
+        Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
+        Assertions.assertNotNull(actualGenre.getCreatedAt());
+        Assertions.assertNotNull(actualGenre.getUpdatedAt());
+        Assertions.assertNull(actualGenre.getDeletedAt());
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeToInactivateAGenreByItsIdentifier() throws Exception {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        final var filmes = givenACategory("Filmes", null, true);
+        final var expectedName = "Ação";
+        final var expectedIsActive = false;
+        final var expectedCategories = List.of(filmes);
+
+        final var actualId = givenAGenre(expectedName, true, expectedCategories);
+
+
+        final var aRequestBody = new UpdateGenreRequest(expectedName, mapTo(expectedCategories, CategoryID::getValue), expectedIsActive);
+
+        updateAGenre(actualId, aRequestBody).andExpect(status().isOk());
+
+
+        final var actualGenre = genreRepository.findById(actualId.getValue()).get();
+
+
+        Assertions.assertEquals(expectedName, actualGenre.getName());
+        Assertions.assertTrue(
+                expectedCategories.size() == actualGenre.getCategoriesIDs().size() &&
+                        expectedCategories.containsAll(actualGenre.getCategoriesIDs())
+        );
+        Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
+        Assertions.assertNotNull(actualGenre.getCreatedAt());
+        Assertions.assertNotNull(actualGenre.getUpdatedAt());
+        Assertions.assertNotNull(actualGenre.getDeletedAt());
+    }
+
+
+    @Test
+    public void asACatalogAdminIShouldBeToActivateAGenreByItsIdentifier() throws Exception {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        final var expectedName = "Ação";
+        final var expectedIsActive = false;
+        final var expectedCategories = List.<CategoryID>of();
+
+        final var actualId = givenAGenre(expectedName, true, expectedCategories);
+
+
+        final var aRequestBody = new UpdateGenreRequest(expectedName, mapTo(expectedCategories, CategoryID::getValue), expectedIsActive);
+
+        updateAGenre(actualId, aRequestBody).andExpect(status().isOk());
+
+
+        final var actualGenre = genreRepository.findById(actualId.getValue()).get();
+
+
+
+        Assertions.assertEquals(expectedName, actualGenre.getName());
+        Assertions.assertEquals(expectedCategories,actualGenre.getCategoriesIDs());
+        Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
+        Assertions.assertNotNull(actualGenre.getCreatedAt());
+        Assertions.assertNotNull(actualGenre.getUpdatedAt());
+        Assertions.assertNotNull(actualGenre.getDeletedAt());
+    }
 
 
 }
