@@ -2,6 +2,7 @@ package com.fullcycle.admin.catalog.e2e.genre;
 
 import com.fullcycle.admin.catalog.E2ETest;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.genre.GenreID;
 import com.fullcycle.admin.catalog.e2e.MockDsl;
 import com.fullcycle.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import com.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
@@ -264,5 +265,29 @@ public class GenreE2ETest implements MockDsl {
         Assertions.assertNotNull(actualGenre.getDeletedAt());
     }
 
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToDeleteAGenreByIdentifier() throws Exception {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        final var filmes = givenACategory("Filmes", null, true);
+        final var actualId = givenAGenre("Ação", true, List.of(filmes));
+
+        deleteAGenre(actualId)
+                .andExpect(status().isNoContent());
+
+        Assertions.assertFalse(this.genreRepository.existsById(actualId.getValue()));
+        Assertions.assertEquals(0, genreRepository.count());
+    }
+
+    @Test
+    public void asACatalogAdminIShouldNotSeeAErrorByDeletingANotExistentGenre() throws Exception {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        deleteAGenre(GenreID.from("123"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(0, genreRepository.count());
+    }
 
 }

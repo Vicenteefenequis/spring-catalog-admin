@@ -27,6 +27,9 @@ public interface MockDsl {
     default ResultActions deleteACategory(final Identifier anId) throws Exception {
         return this.delete("/categories/", anId);
     }
+    default ResultActions deleteAGenre(final Identifier anId) throws Exception {
+        return this.delete("/genres/", anId);
+    }
 
     default CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
         final var actualId = this.given("/categories", new CreateCategoryRequest(aName, aDescription, isActive));
