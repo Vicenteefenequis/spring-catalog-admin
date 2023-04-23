@@ -30,6 +30,29 @@ public class CastMember extends AggregateRoot<CastMemberID> {
         selfValidate();
     }
 
+    public static CastMember with(
+            final CastMemberID anId,
+            final String aName,
+            final CastMemberType aType,
+            final Instant aCreationDate,
+            final Instant aUpdateDate
+    ) {
+        return new CastMember(anId, aName, aType, aCreationDate, aUpdateDate);
+    }
+
+
+    public static CastMember with(
+            final CastMember aMember
+    ) {
+        return new CastMember(
+                aMember.getId(),
+                aMember.getName(),
+                aMember.getType(),
+                aMember.getCreatedAt(),
+                aMember.getUpdatedAt()
+        );
+    }
+
     public static CastMember newMember(final String aName, final CastMemberType aType) {
         final var anId = CastMemberID.unique();
         final var now = InstantUtils.now();
@@ -42,7 +65,8 @@ public class CastMember extends AggregateRoot<CastMemberID> {
         );
     }
 
-    public CastMember update(final String aName,final CastMemberType aType) {
+
+    public CastMember update(final String aName, final CastMemberType aType) {
         this.name = aName;
         this.type = aType;
         this.updatedAt = InstantUtils.now();
