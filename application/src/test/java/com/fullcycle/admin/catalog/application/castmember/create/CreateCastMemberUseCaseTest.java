@@ -3,6 +3,7 @@ package com.fullcycle.admin.catalog.application.castmember.create;
 import com.fullcycle.admin.catalog.application.Fixture;
 import com.fullcycle.admin.catalog.application.UseCaseTest;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
+import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -57,5 +58,31 @@ public class CreateCastMemberUseCaseTest extends UseCaseTest {
                         Objects.nonNull(castMember.getUpdatedAt())
         ));
 
+    }
+
+
+    @Test
+    public void givenAInvalidName_whenCallsCreateCastMember_shouldThrowsNotificationException() {
+        final String expectedName = null;
+        final var expectedType = Fixture.CastMember.type();
+
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var aCommand = new CreateCastMemberCommand(
+                expectedName,
+                expectedType
+        );
+
+        final var actualException = Assertions.assertThrows(
+                NotificationException.class,
+                () -> useCase.execute(aCommand)
+        );
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(castMemberGateway, never()).create(any());
     }
 }
