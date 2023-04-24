@@ -2,6 +2,7 @@ package com.fullcycle.admin.catalog.infrastructure.castmember;
 
 import com.fullcycle.admin.catalog.MySQLGatewayTest;
 import com.fullcycle.admin.catalog.domain.castmember.CastMember;
+import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberType;
 import com.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
@@ -96,5 +97,42 @@ public class CastMemberMySQLGatewayTest {
         Assertions.assertEquals(expectedType, persistedMember.getType());
         Assertions.assertEquals(aMember.getCreatedAt(), persistedMember.getCreatedAt());
         Assertions.assertTrue(aMember.getUpdatedAt().isBefore(persistedMember.getUpdatedAt()));
+    }
+
+
+    @Test
+    public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
+        //given
+        final var aMember = CastMember.newMember(name(), type());
+        final var expectedId = aMember.getId();
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        Assertions.assertEquals(1, castMemberRepository.count());
+
+        //when
+        castMemberMySQLGateway.deleteById(expectedId);
+
+        //then
+
+        Assertions.assertEquals(0, castMemberRepository.count());
+    }
+
+    @Test
+    public void givenAnInvalidID_whenCallsDeleteById_shouldBeIgnored() {
+        //given
+        final var aMember = CastMember.newMember(name(), type());
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        Assertions.assertEquals(1, castMemberRepository.count());
+
+        //when
+        castMemberMySQLGateway.deleteById(CastMemberID.from("invalid-d"));
+
+        //then
+
+        Assertions.assertEquals(1, castMemberRepository.count());
+
     }
 }
