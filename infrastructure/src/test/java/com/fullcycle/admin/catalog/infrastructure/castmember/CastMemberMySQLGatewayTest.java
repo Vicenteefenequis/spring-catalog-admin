@@ -135,4 +135,48 @@ public class CastMemberMySQLGatewayTest {
         Assertions.assertEquals(1, castMemberRepository.count());
 
     }
+
+    @Test
+    public void givenAValidCastMember_whenCallsFindById_shouldReturnIt(){
+        //given
+        final var expectedName = name();
+        final var expectedType = type();
+        final var aMember = CastMember.newMember(expectedName,expectedType);
+        final var expectedId = aMember.getId();
+
+
+
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        //when
+        final var actualMember = castMemberMySQLGateway.findById(expectedId).get();
+
+        //then
+
+        Assertions.assertEquals(expectedId, actualMember.getId());
+        Assertions.assertEquals(expectedName, actualMember.getName());
+        Assertions.assertEquals(expectedType, actualMember.getType());
+        Assertions.assertEquals(aMember.getCreatedAt(), actualMember.getCreatedAt());
+        Assertions.assertEquals(aMember.getUpdatedAt(), actualMember.getUpdatedAt());
+
+        Assertions.assertEquals(1, castMemberRepository.count());
+    }
+    
+
+    @Test
+    public void givenAInvalidId_whenCallsFindById_shouldReturnEmpty(){
+        //given
+        final var aMember = CastMember.newMember(name(),type());
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        //when
+        final var actualMember = castMemberMySQLGateway.findById(CastMemberID.from("invalid-id"));
+
+        //then
+
+        Assertions.assertTrue(actualMember.isEmpty());
+    }
 }
