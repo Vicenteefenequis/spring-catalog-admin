@@ -37,8 +37,8 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
     }
 
     @Override
-    public CastMember update(final CastMember castMember) {
-        return null;
+    public CastMember update(final CastMember aCastMember) {
+        return save(aCastMember);
     }
 
     @Override
