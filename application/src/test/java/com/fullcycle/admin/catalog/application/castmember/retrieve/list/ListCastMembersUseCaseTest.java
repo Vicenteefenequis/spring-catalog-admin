@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalog.application.retrieve.list;
+package com.fullcycle.admin.catalog.application.castmember.retrieve.list;
 
 import com.fullcycle.admin.catalog.application.Fixture;
 import com.fullcycle.admin.catalog.application.UseCaseTest;
