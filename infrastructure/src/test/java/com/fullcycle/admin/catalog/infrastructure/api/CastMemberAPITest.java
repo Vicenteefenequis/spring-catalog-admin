@@ -290,8 +290,7 @@ public class CastMemberAPITest {
                 .when(deleteCastMemberUseCase).execute(any());
 
         //when
-        final var aRequest = delete("/cast_members/{id}", expectedId)
-                .accept(MediaType.APPLICATION_JSON);
+        final var aRequest = delete("/cast_members/{id}", expectedId);
 
         final var response = this.mvc.perform(aRequest);
 
