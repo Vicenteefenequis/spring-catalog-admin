@@ -2,6 +2,7 @@ package com.fullcycle.admin.catalog.infrastructure.api;
 
 import com.fullcycle.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.fullcycle.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.fullcycle.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -25,7 +26,7 @@ public interface CastMemberAPI {
     })
     ResponseEntity<?> create(@RequestBody CreateCastMemberRequest input);
 
-    @GetMapping(value = "{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get a cast member by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cast member retrieved"),
@@ -33,5 +34,19 @@ public interface CastMemberAPI {
             @ApiResponse(responseCode = "500", description = "An internal error was thrown")
     })
     CastMemberResponse getById(@PathVariable String id);
+
+
+    @PutMapping(value = "{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update a cast member by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cast member updated"),
+            @ApiResponse(responseCode = "404", description = "Cast member was not found"),
+            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+            @ApiResponse(responseCode = "500", description = "An internal error was thrown")
+    })
+    ResponseEntity<?> updateById(@PathVariable String id, @RequestBody UpdateCastMemberRequest aBody);
 
 }
