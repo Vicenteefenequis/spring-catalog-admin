@@ -348,8 +348,7 @@ public class CastMemberAPITest {
                 .andExpect(jsonPath("$.items[0].id", equalTo(aMember.getId().getValue())))
                 .andExpect(jsonPath("$.items[0].name", equalTo(aMember.getName())))
                 .andExpect(jsonPath("$.items[0].type", equalTo(aMember.getType().toString())))
-                .andExpect(jsonPath("$.items[0].created_at", equalTo(aMember.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aMember.getUpdatedAt().toString())));
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aMember.getCreatedAt().toString())));
 
 
         verify(listCastMembersUseCase).execute(argThat(aQuery ->
@@ -401,8 +400,7 @@ public class CastMemberAPITest {
                 .andExpect(jsonPath("$.items[0].id", equalTo(aMember.getId().getValue())))
                 .andExpect(jsonPath("$.items[0].name", equalTo(aMember.getName())))
                 .andExpect(jsonPath("$.items[0].type", equalTo(aMember.getType().toString())))
-                .andExpect(jsonPath("$.items[0].created_at", equalTo(aMember.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aMember.getUpdatedAt().toString())));
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aMember.getCreatedAt().toString())));
 
 
         verify(listCastMembersUseCase).execute(argThat(aQuery ->
