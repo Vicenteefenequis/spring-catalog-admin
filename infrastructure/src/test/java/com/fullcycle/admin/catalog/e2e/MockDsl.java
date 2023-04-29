@@ -1,8 +1,11 @@
 package com.fullcycle.admin.catalog.e2e;
 
 import com.fullcycle.admin.catalog.domain.Identifier;
+import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
+import com.fullcycle.admin.catalog.domain.castmember.CastMemberType;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
+import com.fullcycle.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
 import com.fullcycle.admin.catalog.infrastructure.category.models.CategoryResponse;
 import com.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
 import com.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
@@ -24,9 +27,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public interface MockDsl {
     MockMvc mvc();
 
+
+    /**
+     * CastMember
+     **/
+
+    default CastMemberID givenACastMember(final String aName, final CastMemberType aType) throws Exception {
+        final var actualId = this.given("/cast_members", new CreateCastMemberRequest(aName, aType));
+        return CastMemberID.from(actualId);
+    }
+
+
     default ResultActions deleteACategory(final Identifier anId) throws Exception {
         return this.delete("/categories/", anId);
     }
+
     default ResultActions deleteAGenre(final Identifier anId) throws Exception {
         return this.delete("/genres/", anId);
     }
@@ -73,6 +88,7 @@ public interface MockDsl {
     default ResultActions updateCategory(final Identifier anId, final UpdateCategoryRequest aRequest) throws Exception {
         return this.update("/categories/", anId, aRequest);
     }
+
     default ResultActions updateAGenre(final Identifier anId, final UpdateGenreRequest aRequest) throws Exception {
         return this.update("/genres/", anId, aRequest);
     }
