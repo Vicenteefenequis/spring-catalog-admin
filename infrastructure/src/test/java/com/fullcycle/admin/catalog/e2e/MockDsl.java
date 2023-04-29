@@ -7,6 +7,7 @@ import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
 import com.fullcycle.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.fullcycle.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.fullcycle.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import com.fullcycle.admin.catalog.infrastructure.category.models.CategoryResponse;
 import com.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
 import com.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
@@ -60,6 +61,11 @@ public interface MockDsl {
 
     default ResultActions givenACastMemberResult(final String aName, final CastMemberType aType) throws Exception {
         return this.givenResult("/cast_members", new CreateCastMemberRequest(aName, aType));
+    }
+
+
+    default ResultActions updateACastMember(final CastMemberID anId,final String aName, final CastMemberType aType) throws Exception {
+        return this.update("/cast_members/", anId, new UpdateCastMemberRequest(aName, aType));
     }
 
 
