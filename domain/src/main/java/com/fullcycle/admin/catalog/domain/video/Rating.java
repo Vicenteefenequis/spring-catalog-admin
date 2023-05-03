@@ -22,7 +22,7 @@ public enum Rating {
         return name;
     }
 
-    public static Optional<Rating> from(final String label) {
+    public static Optional<Rating> of(final String label) {
         return Arrays.stream(Rating.values())
                 .filter(it -> it.name.equalsIgnoreCase(label))
                 .findFirst();
