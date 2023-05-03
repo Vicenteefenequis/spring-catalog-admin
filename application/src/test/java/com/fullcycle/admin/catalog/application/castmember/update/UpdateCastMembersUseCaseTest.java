@@ -21,7 +21,7 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-public class UpdateCastMemberUseCaseTest extends UseCaseTest {
+public class UpdateCastMembersUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultUpdateCastMemberUseCase useCase;
 
@@ -154,7 +154,7 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
 
         final var expectedId = CastMemberID.from("invalid-id");
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorMessage = "CastMember with ID invalid-id was not found";
 
