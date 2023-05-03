@@ -3,6 +3,7 @@ package com.fullcycle.admin.catalog.domain.castmember;
 import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CastMemberGateway {
@@ -15,4 +16,5 @@ public interface CastMemberGateway {
     CastMember update(CastMember castMember);
 
     Pagination<CastMember> findAll(SearchQuery aQuery);
+    List<CastMemberID> existsById(Iterable<CastMemberID> ids);
 }
