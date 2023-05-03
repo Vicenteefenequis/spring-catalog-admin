@@ -83,7 +83,7 @@ public class Video extends AggregateRoot<VideoID> {
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new VideoValidator(this, handler).validate();
     }
 
     public String getTitle() {
@@ -158,7 +158,6 @@ public class Video extends AggregateRoot<VideoID> {
     }
 
 
-
     public Video update(
             final String aTitle,
             final String aDescription,
@@ -224,11 +223,9 @@ public class Video extends AggregateRoot<VideoID> {
     }
 
 
-
     private void setGenres(final Set<GenreID> genres) {
         this.genres = genres != null ? new HashSet<>(genres) : Collections.emptySet();
     }
-
 
 
     private void setCastMembers(final Set<CastMemberID> castMembers) {
