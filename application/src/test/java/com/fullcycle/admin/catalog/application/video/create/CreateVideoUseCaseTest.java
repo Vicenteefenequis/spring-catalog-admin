@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.exceptions.InternalErrorException;
 import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
@@ -275,12 +276,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(0)).existsById(any());
-        verify(castMemberGateway,times(0)).existsById(any());
-        verify(genreGateway,times(0)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -320,12 +321,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(0)).existsById(any());
-        verify(castMemberGateway,times(0)).existsById(any());
-        verify(genreGateway,times(0)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -380,12 +381,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(0)).existsById(any());
-        verify(castMemberGateway,times(0)).existsById(any());
-        verify(genreGateway,times(0)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -439,12 +440,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(0)).existsById(any());
-        verify(castMemberGateway,times(0)).existsById(any());
-        verify(genreGateway,times(0)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -500,12 +501,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(0)).existsById(any());
-        verify(castMemberGateway,times(0)).existsById(any());
-        verify(genreGateway,times(0)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -567,12 +568,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(1)).existsById(any());
-        verify(castMemberGateway,times(1)).existsById(any());
-        verify(genreGateway,times(1)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(castMemberGateway, times(1)).existsById(any());
+        verify(genreGateway, times(1)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -635,12 +636,12 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(1)).existsById(any());
-        verify(castMemberGateway,times(1)).existsById(any());
-        verify(genreGateway,times(1)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(castMemberGateway, times(1)).existsById(any());
+        verify(genreGateway, times(1)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
@@ -703,17 +704,55 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
-        verify(categoryGateway,times(1)).existsById(any());
-        verify(castMemberGateway,times(1)).existsById(any());
-        verify(genreGateway,times(1)).existsById(any());
-        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
-        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
-        verify(videoGateway,times(0)).create(any());
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(castMemberGateway, times(1)).existsById(any());
+        verify(genreGateway, times(1)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
 
     }
 
 
+    @Test
+    public void givenAValidCommand_whenCallsCreateVideoThrowsException_shouldCallClearResources() {
+        //given
+        final var expectedErrorMessage = "An error on create video was observed [videoId:";
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(Fixture.Categories.aulas().getId());
+        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedMembers = Set.of(Fixture.CastMembers.wesley().getId(), Fixture.CastMembers.vicente().getId());
+        final Resource expectedVideo = Fixture.Videos.resource(Resource.Type.VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(Resource.Type.TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(Resource.Type.BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
+
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
+        when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
+        mockImageMedia();
+        mockAudioVideoMedia();
+        when(videoGateway.create(any())).thenThrow(new RuntimeException("Internal Server Error"));
+        //when
+
+        final var actualException = Assertions.assertThrows(InternalErrorException.class, () -> useCase.execute(aCommand));
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertTrue(actualException.getMessage().startsWith(expectedErrorMessage));
+
+        verify(mediaResourceGateway).clearResources(any());
+
+    }
 
 
     private void mockImageMedia() {
