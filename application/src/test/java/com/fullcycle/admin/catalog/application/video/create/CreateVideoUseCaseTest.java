@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
 import com.fullcycle.admin.catalog.domain.video.*;
@@ -20,8 +21,7 @@ import java.util.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CreateVideoUseCaseTest extends UseCaseTest {
 
@@ -69,23 +69,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aCommand = CreateVideoCommand.with(
-                expectedTitle,
-                expectedDescription,
-                expectedLaunchYear.getValue(),
-                expectedDuration,
-                expectedOpened,
-                expectedPublished,
-                expectedRating.getName(),
-                asString(expectedCategories),
-                asString(expectedGenres),
-                asString(expectedMembers),
-                expectedVideo,
-                expectedTrailer,
-                expectedBanner,
-                expectedThumb,
-                expectedThumbHalf
-        );
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
 
         when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
         when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
@@ -101,23 +85,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
-        verify(videoGateway).create(argThat(actualVideo ->
-                Objects.equals(expectedTitle, actualVideo.getTitle())
-                        && Objects.equals(expectedDescription, actualVideo.getDescription())
-                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
-                        && Objects.equals(expectedDuration, actualVideo.getDuration())
-                        && Objects.equals(expectedOpened, actualVideo.getOpened())
-                        && Objects.equals(expectedPublished, actualVideo.getPublished())
-                        && Objects.equals(expectedRating, actualVideo.getRating())
-                        && Objects.equals(expectedCategories, actualVideo.getCategories())
-                        && Objects.equals(expectedGenres, actualVideo.getGenres())
-                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
-                        && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name())
-                        && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name())
-                        && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name())
-                        && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name())
-                        && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())
-        ));
+        verify(videoGateway).create(argThat(actualVideo -> Objects.equals(expectedTitle, actualVideo.getTitle()) && Objects.equals(expectedDescription, actualVideo.getDescription()) && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt()) && Objects.equals(expectedDuration, actualVideo.getDuration()) && Objects.equals(expectedOpened, actualVideo.getOpened()) && Objects.equals(expectedPublished, actualVideo.getPublished()) && Objects.equals(expectedRating, actualVideo.getRating()) && Objects.equals(expectedCategories, actualVideo.getCategories()) && Objects.equals(expectedGenres, actualVideo.getGenres()) && Objects.equals(expectedMembers, actualVideo.getCastMembers()) && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name()) && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name()) && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name()) && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name()) && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())));
 
     }
 
@@ -140,23 +108,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aCommand = CreateVideoCommand.with(
-                expectedTitle,
-                expectedDescription,
-                expectedLaunchYear.getValue(),
-                expectedDuration,
-                expectedOpened,
-                expectedPublished,
-                expectedRating.getName(),
-                asString(expectedCategories),
-                asString(expectedGenres),
-                asString(expectedMembers),
-                expectedVideo,
-                expectedTrailer,
-                expectedBanner,
-                expectedThumb,
-                expectedThumbHalf
-        );
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
 
 
         when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
@@ -172,23 +124,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
-        verify(videoGateway).create(argThat(actualVideo ->
-                Objects.equals(expectedTitle, actualVideo.getTitle())
-                        && Objects.equals(expectedDescription, actualVideo.getDescription())
-                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
-                        && Objects.equals(expectedDuration, actualVideo.getDuration())
-                        && Objects.equals(expectedOpened, actualVideo.getOpened())
-                        && Objects.equals(expectedPublished, actualVideo.getPublished())
-                        && Objects.equals(expectedRating, actualVideo.getRating())
-                        && Objects.equals(expectedCategories, actualVideo.getCategories())
-                        && Objects.equals(expectedGenres, actualVideo.getGenres())
-                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
-                        && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name())
-                        && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name())
-                        && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name())
-                        && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name())
-                        && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())
-        ));
+        verify(videoGateway).create(argThat(actualVideo -> Objects.equals(expectedTitle, actualVideo.getTitle()) && Objects.equals(expectedDescription, actualVideo.getDescription()) && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt()) && Objects.equals(expectedDuration, actualVideo.getDuration()) && Objects.equals(expectedOpened, actualVideo.getOpened()) && Objects.equals(expectedPublished, actualVideo.getPublished()) && Objects.equals(expectedRating, actualVideo.getRating()) && Objects.equals(expectedCategories, actualVideo.getCategories()) && Objects.equals(expectedGenres, actualVideo.getGenres()) && Objects.equals(expectedMembers, actualVideo.getCastMembers()) && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name()) && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name()) && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name()) && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name()) && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())));
     }
 
 
@@ -211,23 +147,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aCommand = CreateVideoCommand.with(
-                expectedTitle,
-                expectedDescription,
-                expectedLaunchYear.getValue(),
-                expectedDuration,
-                expectedOpened,
-                expectedPublished,
-                expectedRating.getName(),
-                asString(expectedCategories),
-                asString(expectedGenres),
-                asString(expectedMembers),
-                expectedVideo,
-                expectedTrailer,
-                expectedBanner,
-                expectedThumb,
-                expectedThumbHalf
-        );
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
         when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
         when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
         mockImageMedia();
@@ -241,23 +161,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
-        verify(videoGateway).create(argThat(actualVideo ->
-                Objects.equals(expectedTitle, actualVideo.getTitle())
-                        && Objects.equals(expectedDescription, actualVideo.getDescription())
-                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
-                        && Objects.equals(expectedDuration, actualVideo.getDuration())
-                        && Objects.equals(expectedOpened, actualVideo.getOpened())
-                        && Objects.equals(expectedPublished, actualVideo.getPublished())
-                        && Objects.equals(expectedRating, actualVideo.getRating())
-                        && Objects.equals(expectedCategories, actualVideo.getCategories())
-                        && Objects.equals(expectedGenres, actualVideo.getGenres())
-                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
-                        && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name())
-                        && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name())
-                        && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name())
-                        && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name())
-                        && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())
-        ));
+        verify(videoGateway).create(argThat(actualVideo -> Objects.equals(expectedTitle, actualVideo.getTitle()) && Objects.equals(expectedDescription, actualVideo.getDescription()) && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt()) && Objects.equals(expectedDuration, actualVideo.getDuration()) && Objects.equals(expectedOpened, actualVideo.getOpened()) && Objects.equals(expectedPublished, actualVideo.getPublished()) && Objects.equals(expectedRating, actualVideo.getRating()) && Objects.equals(expectedCategories, actualVideo.getCategories()) && Objects.equals(expectedGenres, actualVideo.getGenres()) && Objects.equals(expectedMembers, actualVideo.getCastMembers()) && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name()) && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name()) && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name()) && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name()) && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())));
     }
 
 
@@ -280,23 +184,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aCommand = CreateVideoCommand.with(
-                expectedTitle,
-                expectedDescription,
-                expectedLaunchYear.getValue(),
-                expectedDuration,
-                expectedOpened,
-                expectedPublished,
-                expectedRating.getName(),
-                asString(expectedCategories),
-                asString(expectedGenres),
-                asString(expectedMembers),
-                expectedVideo,
-                expectedTrailer,
-                expectedBanner,
-                expectedThumb,
-                expectedThumbHalf
-        );
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
 
         when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
         when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
@@ -311,23 +199,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
-        verify(videoGateway).create(argThat(actualVideo ->
-                Objects.equals(expectedTitle, actualVideo.getTitle())
-                        && Objects.equals(expectedDescription, actualVideo.getDescription())
-                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
-                        && Objects.equals(expectedDuration, actualVideo.getDuration())
-                        && Objects.equals(expectedOpened, actualVideo.getOpened())
-                        && Objects.equals(expectedPublished, actualVideo.getPublished())
-                        && Objects.equals(expectedRating, actualVideo.getRating())
-                        && Objects.equals(expectedCategories, actualVideo.getCategories())
-                        && Objects.equals(expectedGenres, actualVideo.getGenres())
-                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
-                        && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name())
-                        && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name())
-                        && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name())
-                        && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name())
-                        && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())
-        ));
+        verify(videoGateway).create(argThat(actualVideo -> Objects.equals(expectedTitle, actualVideo.getTitle()) && Objects.equals(expectedDescription, actualVideo.getDescription()) && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt()) && Objects.equals(expectedDuration, actualVideo.getDuration()) && Objects.equals(expectedOpened, actualVideo.getOpened()) && Objects.equals(expectedPublished, actualVideo.getPublished()) && Objects.equals(expectedRating, actualVideo.getRating()) && Objects.equals(expectedCategories, actualVideo.getCategories()) && Objects.equals(expectedGenres, actualVideo.getGenres()) && Objects.equals(expectedMembers, actualVideo.getCastMembers()) && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name()) && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name()) && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name()) && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name()) && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())));
 
     }
 
@@ -350,23 +222,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = null;
         final Resource expectedThumbHalf = null;
 
-        final var aCommand = CreateVideoCommand.with(
-                expectedTitle,
-                expectedDescription,
-                expectedLaunchYear.getValue(),
-                expectedDuration,
-                expectedOpened,
-                expectedPublished,
-                expectedRating.getName(),
-                asString(expectedCategories),
-                asString(expectedGenres),
-                asString(expectedMembers),
-                expectedVideo,
-                expectedTrailer,
-                expectedBanner,
-                expectedThumb,
-                expectedThumbHalf
-        );
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
 
         when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
         when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
@@ -380,49 +236,66 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
-        verify(videoGateway).create(argThat(actualVideo ->
-                Objects.equals(expectedTitle, actualVideo.getTitle())
-                        && Objects.equals(expectedDescription, actualVideo.getDescription())
-                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
-                        && Objects.equals(expectedDuration, actualVideo.getDuration())
-                        && Objects.equals(expectedOpened, actualVideo.getOpened())
-                        && Objects.equals(expectedPublished, actualVideo.getPublished())
-                        && Objects.equals(expectedRating, actualVideo.getRating())
-                        && Objects.equals(expectedCategories, actualVideo.getCategories())
-                        && Objects.equals(expectedGenres, actualVideo.getGenres())
-                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
-                        && actualVideo.getVideo().isEmpty()
-                        && actualVideo.getTrailer().isEmpty()
-                        && actualVideo.getBanner().isEmpty()
-                        && actualVideo.getThumbnail().isEmpty()
-                        && actualVideo.getThumbnailHalf().isEmpty()
-        ));
+        verify(videoGateway).create(argThat(actualVideo -> Objects.equals(expectedTitle, actualVideo.getTitle()) && Objects.equals(expectedDescription, actualVideo.getDescription()) && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt()) && Objects.equals(expectedDuration, actualVideo.getDuration()) && Objects.equals(expectedOpened, actualVideo.getOpened()) && Objects.equals(expectedPublished, actualVideo.getPublished()) && Objects.equals(expectedRating, actualVideo.getRating()) && Objects.equals(expectedCategories, actualVideo.getCategories()) && Objects.equals(expectedGenres, actualVideo.getGenres()) && Objects.equals(expectedMembers, actualVideo.getCastMembers()) && actualVideo.getVideo().isEmpty() && actualVideo.getTrailer().isEmpty() && actualVideo.getBanner().isEmpty() && actualVideo.getThumbnail().isEmpty() && actualVideo.getThumbnailHalf().isEmpty()));
 
     }
 
+    @Test
+    public void givenANullTitle_whenCallsCreateVideo_shouldReturnDomainException() {
+        //given
+        final var expectedErrorMessage = "'title' should not be null";
+        final var expectedErrorCount = 1;
+        final String expectedTitle = null;
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.<CategoryID>of();
+        final var expectedGenres = Set.<GenreID>of();
+        final var expectedMembers = Set.<CastMemberID>of();
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = CreateVideoCommand.with(expectedTitle, expectedDescription, expectedLaunchYear.getValue(), expectedDuration, expectedOpened, expectedPublished, expectedRating.getName(), asString(expectedCategories), asString(expectedGenres), asString(expectedMembers), expectedVideo, expectedTrailer, expectedBanner, expectedThumb, expectedThumbHalf);
+
+
+        //when
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway,times(0)).existsById(any());
+        verify(castMemberGateway,times(0)).existsById(any());
+        verify(genreGateway,times(0)).existsById(any());
+        verify(mediaResourceGateway,times(0)).storeAudioVideo(any(),any());
+        verify(mediaResourceGateway,times(0)).storeImage(any(),any());
+        verify(videoGateway,times(0)).create(any());
+
+    }
 
 
     private void mockImageMedia() {
         when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
-            return ImageMedia.with(
-                    UUID.randomUUID().toString(),
-                    resource.name(),
-                    "/img"
-            );
+            return ImageMedia.with(UUID.randomUUID().toString(), resource.name(), "/img");
         });
     }
 
     private void mockAudioVideoMedia() {
         when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
-            return AudioVideoMedia.with(
-                    UUID.randomUUID().toString(),
-                    resource.name(),
-                    "/img",
-                    "",
-                    MediaStatus.PENDING
-            );
+            return AudioVideoMedia.with(UUID.randomUUID().toString(), resource.name(), "/img", "", MediaStatus.PENDING);
         });
     }
 
