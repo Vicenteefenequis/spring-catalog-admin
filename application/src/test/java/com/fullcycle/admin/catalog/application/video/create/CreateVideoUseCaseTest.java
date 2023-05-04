@@ -331,6 +331,77 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
     }
 
+    @Test
+    public void givenAValidCommandWithoutResources_whenCallsCreateVideo_shouldReturnVideoId() {
+        //given
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(Fixture.Categories.aulas().getId());
+        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedMembers = Set.of(Fixture.CastMembers.wesley().getId(), Fixture.CastMembers.vicente().getId());
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = CreateVideoCommand.with(
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear.getValue(),
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
+        when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
+        when(videoGateway.create(any())).thenAnswer(returnsFirstArg());
+        //when
+
+        final var actualResult = useCase.execute(aCommand);
+        //then
+
+        Assertions.assertNotNull(actualResult);
+        Assertions.assertNotNull(actualResult.id());
+
+        verify(videoGateway).create(argThat(actualVideo ->
+                Objects.equals(expectedTitle, actualVideo.getTitle())
+                        && Objects.equals(expectedDescription, actualVideo.getDescription())
+                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
+                        && Objects.equals(expectedDuration, actualVideo.getDuration())
+                        && Objects.equals(expectedOpened, actualVideo.getOpened())
+                        && Objects.equals(expectedPublished, actualVideo.getPublished())
+                        && Objects.equals(expectedRating, actualVideo.getRating())
+                        && Objects.equals(expectedCategories, actualVideo.getCategories())
+                        && Objects.equals(expectedGenres, actualVideo.getGenres())
+                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
+                        && actualVideo.getVideo().isEmpty()
+                        && actualVideo.getTrailer().isEmpty()
+                        && actualVideo.getBanner().isEmpty()
+                        && actualVideo.getThumbnail().isEmpty()
+                        && actualVideo.getThumbnailHalf().isEmpty()
+        ));
+
+    }
+
+
+
     private void mockImageMedia() {
         when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
