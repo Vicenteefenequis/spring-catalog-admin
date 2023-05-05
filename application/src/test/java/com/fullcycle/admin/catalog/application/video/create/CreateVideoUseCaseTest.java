@@ -86,7 +86,23 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
-        verify(videoGateway).create(argThat(actualVideo -> Objects.equals(expectedTitle, actualVideo.getTitle()) && Objects.equals(expectedDescription, actualVideo.getDescription()) && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt()) && Objects.equals(expectedDuration, actualVideo.getDuration()) && Objects.equals(expectedOpened, actualVideo.getOpened()) && Objects.equals(expectedPublished, actualVideo.getPublished()) && Objects.equals(expectedRating, actualVideo.getRating()) && Objects.equals(expectedCategories, actualVideo.getCategories()) && Objects.equals(expectedGenres, actualVideo.getGenres()) && Objects.equals(expectedMembers, actualVideo.getCastMembers()) && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name()) && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name()) && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name()) && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name()) && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())));
+        verify(videoGateway).create(argThat(actualVideo ->
+                Objects.equals(expectedTitle, actualVideo.getTitle())
+                        && Objects.equals(expectedDescription, actualVideo.getDescription())
+                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
+                        && Objects.equals(expectedDuration, actualVideo.getDuration())
+                        && Objects.equals(expectedOpened, actualVideo.getOpened())
+                        && Objects.equals(expectedPublished, actualVideo.getPublished())
+                        && Objects.equals(expectedRating, actualVideo.getRating())
+                        && Objects.equals(expectedCategories, actualVideo.getCategories())
+                        && Objects.equals(expectedGenres, actualVideo.getGenres())
+                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
+                        && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name())
+                        && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name())
+                        && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name())
+                        && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name())
+                        && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())
+        ));
 
     }
 
