@@ -5,7 +5,6 @@ import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
-import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
 import com.fullcycle.admin.catalog.domain.exceptions.InternalErrorException;
 import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
@@ -162,9 +160,7 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
         return notification;
     }
 
-    private Supplier<DomainException> invalidRating(final String rating) {
-        return () -> DomainException.with(new Error("Rating not found %s".formatted(rating)));
-    }
+
 
     private <T> Set<T> toIdentifier(final Set<String> ids, final Function<String, T> mapper) {
         return ids.stream()
