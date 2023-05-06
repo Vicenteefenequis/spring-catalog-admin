@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.exceptions.InternalErrorException;
 import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
@@ -811,6 +812,211 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
 
     }
 
+
+    @Test
+    public void givenAValidCommand_whenCallsUpdateVideoAndSomeGenresDoesNotExists_shouldReturnDomainException() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var techId = Fixture.Genres.tech().getId();
+
+        final var expectedErrorMessage = "Some genres could not be found: %s".formatted(techId.getValue());
+        final var expectedErrorCount = 1;
+
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Fixture.year();
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(Fixture.Categories.aulas().getId());
+        final var expectedGenres = Set.of(techId);
+        final var expectedMembers = Set.of(Fixture.CastMembers.wesley().getId());
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear,
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        //when
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
+        when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>());
+
+        //when
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(castMemberGateway, times(1)).existsById(any());
+        verify(genreGateway, times(1)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).update(any());
+
+    }
+
+
+    @Test
+    public void givenAValidCommand_whenCallsUpdateVideoAndSomeCastMembersDoesNotExists_shouldReturnDomainException() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var vicenteID = Fixture.CastMembers.vicente().getId();
+
+        final var expectedErrorMessage = "Some cast members could not be found: %s".formatted(vicenteID.getValue());
+        final var expectedErrorCount = 1;
+
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Fixture.year();
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(Fixture.Categories.aulas().getId());
+        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedMembers = Set.of(vicenteID);
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear,
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        //when
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
+        when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>());
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
+
+        //when
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(castMemberGateway, times(1)).existsById(any());
+        verify(genreGateway, times(1)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).create(any());
+
+    }
+
+
+    @Test
+    public void givenAValidCommand_whenCallsUpdateVideoThrowsException_shouldNotCallClearResources() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var expectedErrorMessage = "An error on create video was observed [videoId:";
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(Fixture.Categories.aulas().getId());
+        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedMembers = Set.of(Fixture.CastMembers.wesley().getId(), Fixture.CastMembers.vicente().getId());
+        final Resource expectedVideo = Fixture.Videos.resource(Resource.Type.VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(Resource.Type.TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(Resource.Type.BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear.getValue(),
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        //when
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
+        when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
+        mockImageMedia();
+        mockAudioVideoMedia();
+        when(videoGateway.update(any())).thenThrow(new RuntimeException("Internal Server Error"));
+        //when
+
+        final var actualException = Assertions.assertThrows(InternalErrorException.class, () -> useCase.execute(aCommand));
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertTrue(actualException.getMessage().startsWith(expectedErrorMessage));
+
+        verify(mediaResourceGateway,times(0)).clearResources(any());
+
+    }
 
 
     private void mockImageMedia() {
