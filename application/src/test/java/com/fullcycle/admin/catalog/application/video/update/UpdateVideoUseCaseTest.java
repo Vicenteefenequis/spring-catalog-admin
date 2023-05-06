@@ -741,6 +741,77 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
     }
 
 
+    @Test
+    public void givenAValidCommand_whenCallsUpdateVideoAndSomeCategoriesDoesNotExists_shouldReturnDomainException() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var aulaId = Fixture.Categories.aulas().getId();
+
+        final var expectedErrorMessage = "Some categories could not be found: %s".formatted(aulaId.getValue());
+        final var expectedErrorCount = 1;
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Fixture.year();
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(aulaId);
+        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedMembers = Set.of(Fixture.CastMembers.wesley().getId());
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear,
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        //when
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>());
+        when(castMemberGateway.existsById(any())).thenReturn(new ArrayList<>(expectedMembers));
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
+
+        //when
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway, times(1)).existsById(any());
+        verify(castMemberGateway, times(1)).existsById(any());
+        verify(genreGateway, times(1)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).update(any());
+
+    }
+
+
 
     private void mockImageMedia() {
         when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
