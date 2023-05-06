@@ -676,6 +676,71 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
     }
 
 
+    @Test
+    public void givenANullLaunchedAt_whenCallsUpdateVideo_shouldReturnDomainException() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var expectedErrorMessage = "'launchedAt' should not be null";
+        final var expectedErrorCount = 1;
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final Integer expectedLaunchYear = null;
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.<CategoryID>of();
+        final var expectedGenres = Set.<GenreID>of();
+        final var expectedMembers = Set.<CastMemberID>of();
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear,
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        //when
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).update(any());
+
+    }
+
+
 
     private void mockImageMedia() {
         when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
