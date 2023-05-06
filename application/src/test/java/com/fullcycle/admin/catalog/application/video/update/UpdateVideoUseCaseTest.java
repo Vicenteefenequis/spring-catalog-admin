@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
+import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
 import com.fullcycle.admin.catalog.domain.video.*;
@@ -20,8 +21,7 @@ import java.util.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UpdateVideoUseCaseTest extends UseCaseTest {
     @InjectMocks
@@ -413,6 +413,71 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
                         && Objects.equals(aVideo.getCreatedAt(), actualVideo.getCreatedAt())
                         && aVideo.getUpdatedAt().isBefore(actualVideo.getUpdatedAt())
         ));
+    }
+
+
+    @Test
+    public void givenANullTitle_whenCallsUpdateVideo_shouldReturnDomainException() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var expectedErrorMessage = "'title' should not be null";
+        final var expectedErrorCount = 1;
+        final String expectedTitle = null;
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.<CategoryID>of();
+        final var expectedGenres = Set.<GenreID>of();
+        final var expectedMembers = Set.<CastMemberID>of();
+        final Resource expectedVideo = null;
+        final Resource expectedTrailer = null;
+        final Resource expectedBanner = null;
+        final Resource expectedThumb = null;
+        final Resource expectedThumbHalf = null;
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear.getValue(),
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        //when
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+        //then
+
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(categoryGateway, times(0)).existsById(any());
+        verify(castMemberGateway, times(0)).existsById(any());
+        verify(genreGateway, times(0)).existsById(any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
+        verify(mediaResourceGateway, times(0)).storeImage(any(), any());
+        verify(videoGateway, times(0)).update(any());
+
     }
 
 
