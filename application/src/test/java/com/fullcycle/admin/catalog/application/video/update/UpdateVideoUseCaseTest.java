@@ -3,6 +3,7 @@ package com.fullcycle.admin.catalog.application.video.update;
 import com.fullcycle.admin.catalog.application.Fixture;
 import com.fullcycle.admin.catalog.application.UseCaseTest;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
+import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.GenreGateway;
@@ -245,6 +246,80 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualResult);
         Assertions.assertNotNull(actualResult.id());
 
+
+        verify(videoGateway).update(argThat(actualVideo ->
+                Objects.equals(expectedTitle, actualVideo.getTitle())
+                        && Objects.equals(expectedDescription, actualVideo.getDescription())
+                        && Objects.equals(expectedLaunchYear, actualVideo.getLaunchedAt())
+                        && Objects.equals(expectedDuration, actualVideo.getDuration())
+                        && Objects.equals(expectedOpened, actualVideo.getOpened())
+                        && Objects.equals(expectedPublished, actualVideo.getPublished())
+                        && Objects.equals(expectedRating, actualVideo.getRating())
+                        && Objects.equals(expectedCategories, actualVideo.getCategories())
+                        && Objects.equals(expectedGenres, actualVideo.getGenres())
+                        && Objects.equals(expectedMembers, actualVideo.getCastMembers())
+                        && Objects.equals(expectedVideo.name(), actualVideo.getVideo().get().name())
+                        && Objects.equals(expectedTrailer.name(), actualVideo.getTrailer().get().name())
+                        && Objects.equals(expectedBanner.name(), actualVideo.getBanner().get().name())
+                        && Objects.equals(expectedThumb.name(), actualVideo.getThumbnail().get().name())
+                        && Objects.equals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name())
+                        && Objects.equals(aVideo.getCreatedAt(), actualVideo.getCreatedAt())
+                        && aVideo.getUpdatedAt().isBefore(actualVideo.getUpdatedAt())
+        ));
+    }
+
+    @Test
+    public void givenAValidCommandWithoutCastMembers_whenCallsUpdateVideo_shouldReturnVideoId() {
+        //given
+        final var aVideo = Fixture.Videos.systemDesign();
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(Fixture.Categories.aulas().getId());
+        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedMembers = Set.<CastMemberID>of();
+        final Resource expectedVideo = Fixture.Videos.resource(Resource.Type.VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(Resource.Type.TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(Resource.Type.BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
+
+        final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear.getValue(),
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                asString(expectedCategories),
+                asString(expectedGenres),
+                asString(expectedMembers),
+                expectedVideo,
+                expectedTrailer,
+                expectedBanner,
+                expectedThumb,
+                expectedThumbHalf
+        );
+
+        when(videoGateway.findById(any())).thenReturn(Optional.of(Video.with(aVideo)));
+        when(categoryGateway.existsById(any())).thenReturn(new ArrayList<>(expectedCategories));
+        when(genreGateway.existsById(any())).thenReturn(new ArrayList<>(expectedGenres));
+        mockImageMedia();
+        mockAudioVideoMedia();
+        when(videoGateway.update(any())).thenAnswer(returnsFirstArg());
+        //when
+
+        final var actualResult = useCase.execute(aCommand);
+        //then
+
+        Assertions.assertNotNull(actualResult);
+        Assertions.assertNotNull(actualResult.id());
 
         verify(videoGateway).update(argThat(actualVideo ->
                 Objects.equals(expectedTitle, actualVideo.getTitle())
