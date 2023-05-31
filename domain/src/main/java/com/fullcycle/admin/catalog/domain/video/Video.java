@@ -81,6 +81,8 @@ public class Video extends AggregateRoot<VideoID> {
         this.castMembers = members;
     }
 
+
+
     @Override
     public void validate(ValidationHandler handler) {
         new VideoValidator(this, handler).validate();
@@ -292,6 +294,50 @@ public class Video extends AggregateRoot<VideoID> {
                 new HashSet<>(aVideo.getCategories()),
                 new HashSet<>(aVideo.getGenres()),
                 new HashSet<>(aVideo.getCastMembers())
+        );
+    }
+
+
+    public static Video with(
+            final VideoID anId,
+            final String aTitle,
+            final String aDescription,
+            final Year aLaunchedAt,
+            final double aDuration,
+            final Rating aRating,
+            final boolean isOpened,
+            final boolean isPublished,
+            final Instant aCreatedAt,
+            final Instant anUpdatedAt,
+            final ImageMedia aBanner,
+            final ImageMedia aThumbnail,
+            final ImageMedia aThumbnailHalf,
+            final AudioVideoMedia aTrailer,
+            final AudioVideoMedia aVideo,
+            final Set<CategoryID> categories,
+            final Set<GenreID> genres,
+            final Set<CastMemberID> members
+    ) {
+
+        return new Video(
+                anId,
+                aTitle,
+                aDescription,
+                aLaunchedAt,
+                aDuration,
+                aRating,
+                isOpened,
+                isPublished,
+                aCreatedAt,
+                anUpdatedAt,
+                aBanner,
+                aThumbnail,
+                aThumbnailHalf,
+                aTrailer,
+                aVideo,
+                categories,
+                genres,
+                members
         );
     }
 }
