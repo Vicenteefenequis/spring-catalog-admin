@@ -1,17 +1,16 @@
 package com.fullcycle.admin.catalog.domain.video;
 
 import com.fullcycle.admin.catalog.domain.Identifier;
+import com.fullcycle.admin.catalog.domain.utils.IdUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class VideoID extends Identifier {
 
     private final String value;
 
     public VideoID(String value) {
-        Objects.requireNonNull(value);
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
 
@@ -19,12 +18,8 @@ public class VideoID extends Identifier {
         return new VideoID(anId.toLowerCase());
     }
 
-    public static VideoID from(final UUID anId) {
-        return  VideoID.from(anId.toString());
-    }
-
     public static VideoID unique() {
-        return VideoID.from(UUID.randomUUID());
+        return VideoID.from(IdUtils.uuid());
     }
 
 

@@ -257,7 +257,6 @@ public class VideoTest {
         Assertions.assertEquals(expectedMembers, actualVideo.getCastMembers());
         Assertions.assertTrue(actualVideo.getVideo().isEmpty());
         Assertions.assertEquals(aTrailerMedia,actualVideo.getTrailer().get());
-        Assertions.assertTrue(actualVideo.getTrailer().isEmpty());
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
