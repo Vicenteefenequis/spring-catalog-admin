@@ -2,7 +2,7 @@ package com.fullcycle.admin.catalog.e2e.castmember;
 
 
 import com.fullcycle.admin.catalog.E2ETest;
-import com.fullcycle.admin.catalog.Fixture;
+import com.fullcycle.admin.catalog.domain.Fixture;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberType;
 import com.fullcycle.admin.catalog.e2e.MockDsl;
@@ -54,7 +54,7 @@ public class CastMemberE2ETest implements MockDsl {
         Assertions.assertEquals(0, castMemberRepository.count());
 
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var actualMemberID = givenACastMember(expectedName, expectedType);
 
@@ -76,7 +76,7 @@ public class CastMemberE2ETest implements MockDsl {
         Assertions.assertEquals(0, castMemberRepository.count());
 
         final String expectedName = null;
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
         final var expectedErrorMessage = "'name' should not be null";
 
         givenACastMemberResult(expectedName, expectedType)
@@ -180,11 +180,11 @@ public class CastMemberE2ETest implements MockDsl {
         Assertions.assertEquals(0, castMemberRepository.count());
 
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var actualId = givenACastMember(expectedName, expectedType);
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
 
         final var actualMember = retrieveACastMember(actualId);
 
@@ -202,8 +202,8 @@ public class CastMemberE2ETest implements MockDsl {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
         Assertions.assertEquals(0, castMemberRepository.count());
 
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
 
         retrieveACastMemberResult(CastMemberID.from("123"))
                 .andExpect(status().isNotFound())
@@ -219,7 +219,7 @@ public class CastMemberE2ETest implements MockDsl {
         final var expectedName = "Vin Diesel";
         final var expectedType = CastMemberType.ACTOR;
 
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
         final var actualId = givenACastMember("vin", CastMemberType.DIRECTOR);
 
 
@@ -245,7 +245,7 @@ public class CastMemberE2ETest implements MockDsl {
         final var expectedName = "";
         final var expectedType = CastMemberType.ACTOR;
 
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
         final var actualId = givenACastMember("vin", CastMemberType.DIRECTOR);
 
 
@@ -262,8 +262,8 @@ public class CastMemberE2ETest implements MockDsl {
         Assertions.assertEquals(0, castMemberRepository.count());
 
 
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
-        final var actualId = givenACastMember(Fixture.name(),  Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
+        final var actualId = givenACastMember(Fixture.name(),  Fixture.CastMembers.type());
 
         Assertions.assertEquals(2, castMemberRepository.count());
 
@@ -281,8 +281,8 @@ public class CastMemberE2ETest implements MockDsl {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
         Assertions.assertEquals(0, castMemberRepository.count());
 
-        givenACastMember(Fixture.name(), Fixture.CastMember.type());
-        givenACastMember(Fixture.name(),  Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMembers.type());
+        givenACastMember(Fixture.name(),  Fixture.CastMembers.type());
 
         Assertions.assertEquals(2, castMemberRepository.count());
 

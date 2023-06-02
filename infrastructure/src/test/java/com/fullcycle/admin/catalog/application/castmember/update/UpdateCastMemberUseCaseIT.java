@@ -1,6 +1,6 @@
 package com.fullcycle.admin.catalog.application.castmember.update;
 
-import com.fullcycle.admin.catalog.Fixture;
+import com.fullcycle.admin.catalog.domain.Fixture;
 import com.fullcycle.admin.catalog.IntegrationTest;
 import com.fullcycle.admin.catalog.domain.castmember.CastMember;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
@@ -138,7 +138,7 @@ public class UpdateCastMemberUseCaseIT {
 
         final var expectedId = CastMemberID.from("invalid-id");
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorMessage = "CastMember with ID invalid-id was not found";
 

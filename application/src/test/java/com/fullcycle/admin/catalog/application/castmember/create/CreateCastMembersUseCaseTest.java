@@ -1,6 +1,6 @@
 package com.fullcycle.admin.catalog.application.castmember.create;
 
-import com.fullcycle.admin.catalog.application.Fixture;
+import com.fullcycle.admin.catalog.domain.Fixture;
 import com.fullcycle.admin.catalog.application.UseCaseTest;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberType;
