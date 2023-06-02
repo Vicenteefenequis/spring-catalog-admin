@@ -7,8 +7,8 @@ import com.fullcycle.admin.catalog.domain.video.VideoID;
 import com.fullcycle.admin.catalog.domain.video.VideoSearchQuery;
 import com.fullcycle.admin.catalog.infrastructure.video.persistence.VideoJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.video.persistence.VideoRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 public class DefaultVideoGateway implements VideoGateway {
@@ -29,14 +29,15 @@ public class DefaultVideoGateway implements VideoGateway {
     @Override
     public void deleteById(final VideoID anId) {
         final var aVideoId = anId.getValue();
-        if(this.videoRepository.existsById(aVideoId)) {
+        if (this.videoRepository.existsById(aVideoId)) {
             this.videoRepository.deleteById(aVideoId);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Video> findById(VideoID anId) {
-        return Optional.empty();
+        return this.videoRepository.findById(anId.getValue()).map(VideoJpaEntity::toAggregate);
     }
 
     @Override
