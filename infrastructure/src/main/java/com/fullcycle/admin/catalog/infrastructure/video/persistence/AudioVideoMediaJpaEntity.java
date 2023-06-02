@@ -8,10 +8,13 @@ import javax.persistence.*;
 
 @Entity(name = "AudioMediaVideo")
 @Table(name = "videos_video_media")
-public class AudioMediaVideoJpaEntity {
+public class AudioVideoMediaJpaEntity {
 
     @Id
     private String id;
+
+    @Column(name = "checksum", nullable = false)
+    private String checksum;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -22,30 +25,33 @@ public class AudioMediaVideoJpaEntity {
     @Column(name = "encoded_path", nullable = false)
     private String encodedPath;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "media_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private MediaStatus status;
 
 
-    public AudioMediaVideoJpaEntity() {
+    public AudioVideoMediaJpaEntity() {
     }
 
-    private AudioMediaVideoJpaEntity(
+    private AudioVideoMediaJpaEntity(
             final String id,
+            final String checksum,
             final String name,
             final String filePath,
             final String encodedPath,
             final MediaStatus status
     ) {
         this.id = id;
+        this.checksum = checksum;
         this.name = name;
         this.filePath = filePath;
         this.encodedPath = encodedPath;
         this.status = status;
     }
 
-    public static AudioMediaVideoJpaEntity from(final AudioVideoMedia media) {
-        return new AudioMediaVideoJpaEntity(
+    public static AudioVideoMediaJpaEntity from(final AudioVideoMedia media) {
+        return new AudioVideoMediaJpaEntity(
+                media.id(),
                 media.checksum(),
                 media.name(),
                 media.rawLocation(),
@@ -57,6 +63,7 @@ public class AudioMediaVideoJpaEntity {
     public AudioVideoMedia toDomain() {
         return AudioVideoMedia.with(
                 getId(),
+                getChecksum(),
                 getName(),
                 getFilePath(),
                 getEncodedPath(),
@@ -70,6 +77,14 @@ public class AudioMediaVideoJpaEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getChecksum() {
+        return checksum;
+    }
+
+    public void setChecksum(String checksum) {
+        this.checksum = checksum;
     }
 
     public String getName() {

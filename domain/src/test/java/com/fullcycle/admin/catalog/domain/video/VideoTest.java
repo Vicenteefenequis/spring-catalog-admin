@@ -172,7 +172,7 @@ public class VideoTest {
 
         //when
 
-        final var aVideoMedia = AudioVideoMedia.with("abs","Video.mp4","/123/videos","",MediaStatus.PENDING);
+        final var aVideoMedia = AudioVideoMedia.with("abs","Video.mp4","/123/videos");
         final var actualVideo = Video.with(aVideo).setVideo(aVideoMedia);
 
 
@@ -235,7 +235,7 @@ public class VideoTest {
 
         //when
 
-        final var aTrailerMedia = AudioVideoMedia.with("abs","Trailer.mp4","/123/videos","",MediaStatus.PENDING);
+        final var aTrailerMedia = AudioVideoMedia.with("abs","Trailer.mp4","/123/videos");
         final var actualVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
 
 

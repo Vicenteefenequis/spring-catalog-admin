@@ -3,6 +3,7 @@ package com.fullcycle.admin.catalog.infrastructure.video.persistence;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
+import com.fullcycle.admin.catalog.domain.utils.CollectionUtils;
 import com.fullcycle.admin.catalog.domain.video.Rating;
 import com.fullcycle.admin.catalog.domain.video.Video;
 import com.fullcycle.admin.catalog.domain.video.VideoID;
@@ -53,11 +54,11 @@ public class VideoJpaEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "video_id", referencedColumnName = "id")
-    private AudioMediaVideoJpaEntity video;
+    private AudioVideoMediaJpaEntity video;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "trailer_id", referencedColumnName = "id")
-    private AudioMediaVideoJpaEntity trailer;
+    private AudioVideoMediaJpaEntity trailer;
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -96,8 +97,8 @@ public class VideoJpaEntity {
             final double duration,
             final Instant createdAt,
             final Instant updatedAt,
-            final AudioMediaVideoJpaEntity video,
-            final AudioMediaVideoJpaEntity trailer,
+            final AudioVideoMediaJpaEntity video,
+            final AudioVideoMediaJpaEntity trailer,
             final ImageMediaJpaEntity banner,
             final ImageMediaJpaEntity thumbnail,
             final ImageMediaJpaEntity thumbnailHalf
@@ -134,8 +135,8 @@ public class VideoJpaEntity {
                 aVideo.getDuration(),
                 aVideo.getCreatedAt(),
                 aVideo.getUpdatedAt(),
-                aVideo.getVideo().map(AudioMediaVideoJpaEntity::from).orElse(null),
-                aVideo.getTrailer().map(AudioMediaVideoJpaEntity::from).orElse(null),
+                aVideo.getVideo().map(AudioVideoMediaJpaEntity::from).orElse(null),
+                aVideo.getTrailer().map(AudioVideoMediaJpaEntity::from).orElse(null),
                 aVideo.getBanner().map(ImageMediaJpaEntity::from).orElse(null),
                 aVideo.getThumbnail().map(ImageMediaJpaEntity::from).orElse(null),
                 aVideo.getThumbnailHalf().map(ImageMediaJpaEntity::from).orElse(null)
@@ -162,8 +163,8 @@ public class VideoJpaEntity {
                 Optional.ofNullable(getBanner()).map(ImageMediaJpaEntity::toDomain).orElse(null),
                 Optional.ofNullable(getThumbnail()).map(ImageMediaJpaEntity::toDomain).orElse(null),
                 Optional.ofNullable(getThumbnailHalf()).map(ImageMediaJpaEntity::toDomain).orElse(null),
-                Optional.ofNullable(getTrailer()).map(AudioMediaVideoJpaEntity::toDomain).orElse(null),
-                Optional.ofNullable(getVideo()).map(AudioMediaVideoJpaEntity::toDomain).orElse(null),
+                Optional.ofNullable(getTrailer()).map(AudioVideoMediaJpaEntity::toDomain).orElse(null),
+                Optional.ofNullable(getVideo()).map(AudioVideoMediaJpaEntity::toDomain).orElse(null),
                 getCategories().stream().map(it -> CategoryID.from(it.getId().getCategoryId())).collect(Collectors.toSet()),
                 getGenres().stream().map(it -> GenreID.from(it.getId().getGenreId())).collect(Collectors.toSet()),
                 getCastMembers().stream().map(it -> CastMemberID.from(it.getId().getCastMemberId())).collect(Collectors.toSet())
@@ -264,19 +265,19 @@ public class VideoJpaEntity {
         this.updatedAt = updatedAt;
     }
 
-    public AudioMediaVideoJpaEntity getVideo() {
+    public AudioVideoMediaJpaEntity getVideo() {
         return video;
     }
 
-    public void setVideo(AudioMediaVideoJpaEntity video) {
+    public void setVideo(AudioVideoMediaJpaEntity video) {
         this.video = video;
     }
 
-    public AudioMediaVideoJpaEntity getTrailer() {
+    public AudioVideoMediaJpaEntity getTrailer() {
         return trailer;
     }
 
-    public void setTrailer(AudioMediaVideoJpaEntity trailer) {
+    public void setTrailer(AudioVideoMediaJpaEntity trailer) {
         this.trailer = trailer;
     }
 
@@ -326,6 +327,18 @@ public class VideoJpaEntity {
 
     public void setCastMembers(Set<VideoCastMemberJpaEntity> castMembers) {
         this.castMembers = castMembers;
+    }
+
+    public Set<CategoryID> getCategoriesID() {
+        return CollectionUtils.mapTo(getCategories(), it -> CategoryID.from(it.getId().getCategoryId()));
+    }
+
+    public Set<GenreID> getGenresID() {
+        return CollectionUtils.mapTo(getGenres(), it -> GenreID.from(it.getId().getGenreId()));
+    }
+
+    public Set<CastMemberID> getCastMembersId() {
+        return CollectionUtils.mapTo(getCastMembers(), it -> CastMemberID.from(it.getId().getCastMemberId()));
     }
 }
 
