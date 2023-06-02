@@ -69,7 +69,7 @@ public class VideoJpaEntity {
     private ImageMediaJpaEntity thumbnail;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "trailer_half_id", referencedColumnName = "id")
+    @JoinColumn(name = "thumbnail_half_id", referencedColumnName = "id")
     private ImageMediaJpaEntity thumbnailHalf;
 
 
