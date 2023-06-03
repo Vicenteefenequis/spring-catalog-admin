@@ -785,7 +785,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
     private void mockAudioVideoMedia() {
         when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
-            return AudioVideoMedia.with(IdUtils.uuid(), resource.name(), "/img", "", MediaStatus.PENDING);
+            return AudioVideoMedia.with(IdUtils.uuid(), "checksum", resource.name(), "/img", "", MediaStatus.PENDING);
         });
     }
 

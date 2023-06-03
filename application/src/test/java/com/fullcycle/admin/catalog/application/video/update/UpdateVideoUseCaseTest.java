@@ -1015,7 +1015,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualException);
         Assertions.assertTrue(actualException.getMessage().startsWith(expectedErrorMessage));
 
-        verify(mediaResourceGateway,times(0)).clearResources(any());
+        verify(mediaResourceGateway, times(0)).clearResources(any());
 
     }
 
@@ -1030,7 +1030,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
     private void mockAudioVideoMedia() {
         when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
-            return AudioVideoMedia.with(IdUtils.uuid(), resource.name(), "/img", "", MediaStatus.PENDING);
+            return AudioVideoMedia.with(IdUtils.uuid(), "checksum", resource.name(), "/img", "", MediaStatus.PENDING);
         });
     }
 }
