@@ -436,4 +436,30 @@ public class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name());
 
     }
+
+
+    @Test
+    public void givenAInvalid_whenCallsFindById_shouldReturnEmpty() {
+        //given
+        videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        final var anId = VideoID.unique();
+
+        //when
+        final var actualVideo = videoGateway.findById(anId);
+        //then
+
+        Assertions.assertTrue(actualVideo.isEmpty());
+    }
 }
