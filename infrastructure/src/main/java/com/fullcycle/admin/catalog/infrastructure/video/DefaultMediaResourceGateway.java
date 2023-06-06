@@ -6,6 +6,8 @@ import com.fullcycle.admin.catalog.infrastructure.configuration.properties.stora
 import com.fullcycle.admin.catalog.infrastructure.services.StorageService;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class DefaultMediaResourceGateway implements MediaResourceGateway {
     private final String filenamePattern;
@@ -20,7 +22,7 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
 
     @Override
     public AudioVideoMedia storeAudioVideo(final VideoID anId, final VideoResource videoResource) {
-        final var filepath = filepath(anId, videoResource);
+        final var filepath = filepath(anId, videoResource.type());
         final var aResource = videoResource.resource();
         store(filepath, aResource);
         return AudioVideoMedia.with(aResource.checksum(), aResource.name(), filepath);
@@ -29,10 +31,15 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
 
     @Override
     public ImageMedia storeImage(final VideoID anId, final VideoResource videoResource) {
-        final var filepath = filepath(anId, videoResource);
+        final var filepath = filepath(anId, videoResource.type());
         final var aResource = videoResource.resource();
         store(filepath, aResource);
         return ImageMedia.with(aResource.checksum(), aResource.name(), filepath);
+    }
+
+    @Override
+    public Optional<Resource> getResource(final VideoID anId, final VideoMediaType aType) {
+        return this.storageService.get(filepath(anId, aType));
     }
 
     @Override
@@ -49,10 +56,10 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
         return locationPattern.replace("{videoId}", anId.getValue());
     }
 
-    private String filepath(final VideoID anId, final VideoResource aResource) {
+    private String filepath(final VideoID anId, final VideoMediaType aType) {
         return folder(anId)
                 .concat("/")
-                .concat(filename(aResource.type()));
+                .concat(filename(aType));
     }
 
     private void store(final String filepath, final Resource aResource) {

@@ -87,6 +87,49 @@ public class DefaultMediaResourceGatewayTest {
         Assertions.assertEquals(expectedResource, actualStored);
     }
 
+
+    @Test
+    public void givenValidVideoId_whenCallsGetResource_shouldReturnIt() {
+        //given
+        final var videoOne = VideoID.unique();
+        final var expectedType = VideoMediaType.VIDEO;
+        final var expectedResource = resource(VideoMediaType.VIDEO);
+
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), expectedType), expectedResource);
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), VideoMediaType.TRAILER.name()), resource(mediaType()));
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), VideoMediaType.BANNER.name()), resource(mediaType()));
+
+        Assertions.assertEquals(3, storageService().storage().size());
+
+        //when
+        final var actualResult = this.mediaResourceGateway.getResource(videoOne, expectedType).get();
+
+        //then
+        Assertions.assertEquals(expectedResource, actualResult);
+
+    }
+
+    @Test
+    public void givenInvalidType_whenCallsGetResource_shouldReturnEmpty() {
+        //given
+        final var videoOne = VideoID.unique();
+        final var expectedType = VideoMediaType.THUMBNAIL;
+
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), VideoMediaType.VIDEO), resource(mediaType()));
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), VideoMediaType.TRAILER.name()), resource(mediaType()));
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), VideoMediaType.BANNER.name()), resource(mediaType()));
+
+        Assertions.assertEquals(3, storageService().storage().size());
+
+        //when
+        final var actualResult = this.mediaResourceGateway.getResource(videoOne, expectedType);
+
+        //then
+        Assertions.assertTrue(actualResult.isEmpty());
+
+    }
+
+
     @Test
     public void givenValidVideoId_whenCallsClearResources_shouldDeleteAll() {
         //given
