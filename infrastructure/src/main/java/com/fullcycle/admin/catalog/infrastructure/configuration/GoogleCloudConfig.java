@@ -1,7 +1,7 @@
 package com.fullcycle.admin.catalog.infrastructure.configuration;
 
-import com.fullcycle.admin.catalog.infrastructure.configuration.properties.GoogleCloudProperties;
-import com.fullcycle.admin.catalog.infrastructure.configuration.properties.GoogleStorageProperties;
+import com.fullcycle.admin.catalog.infrastructure.configuration.properties.google.GoogleCloudProperties;
+import com.fullcycle.admin.catalog.infrastructure.configuration.properties.google.GoogleStorageProperties;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
