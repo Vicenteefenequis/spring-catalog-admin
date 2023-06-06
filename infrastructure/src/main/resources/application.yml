@@ -52,3 +52,8 @@ spring:
         "[hibernate.dialect]": org.hibernate.dialect.MySQL5InnoDBDialect
         "[hibernate.generate_statistics]": true
         "[hibernate.connection.provider_disables_autocommit]": true
+
+storage:
+  catalog-videos:
+    filename-pattern: type-{type}
+    location-pattern: videoId-{videoId}
