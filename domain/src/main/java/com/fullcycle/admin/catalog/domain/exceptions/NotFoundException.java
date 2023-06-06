@@ -16,4 +16,8 @@ public class NotFoundException extends DomainException {
         final var anError = "%s with ID %s was not found".formatted(anAggregate.getSimpleName(), anId.getValue());
         return new NotFoundException(anError, Collections.emptyList());
     }
+
+    public static NotFoundException with(final Error error) {
+        return new NotFoundException(error.message(), List.of(error));
+    }
 }
