@@ -4,9 +4,9 @@ import com.fullcycle.admin.catalog.domain.castmember.CastMember;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberType;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.genre.Genre;
-import com.fullcycle.admin.catalog.domain.video.Rating;
-import com.fullcycle.admin.catalog.domain.video.Resource;
-import com.fullcycle.admin.catalog.domain.video.Video;
+import com.fullcycle.admin.catalog.domain.utils.IdUtils;
+import com.fullcycle.admin.catalog.domain.video.*;
+import com.fullcycle.admin.catalog.domain.resource.Resource;
 import com.github.javafaker.Faker;
 
 import java.time.Year;
@@ -122,19 +122,41 @@ public final class Fixture {
             return FAKER.options().option(Rating.values());
         }
 
-        public static Resource resource(final Resource.Type type) {
+        public static Resource resource(final VideoMediaType type) {
             final String contentType = Match(type).of(
-                    Case($(List(Resource.Type.VIDEO, Resource.Type.TRAILER)::contains), "video/mp4"),
+                    Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
                     Case($(), "image/jpg")
             );
+            final String checksum = IdUtils.uuid();
             final byte[] content = "Conteudo".getBytes();
-            return Resource.with(content, contentType, type.name().toLowerCase(), type);
+            return Resource.with(checksum,content, contentType, type.name().toLowerCase());
         }
 
         public static String description() {
             return FAKER.options().option(
                     "Disclaimer: This video is not sponsored. I do use affiliate links when linking products in the video description. This does not affect your buying experience or item price but does mean I receive a small commission on items purchased using such links.",
                     "This video is sponsored by Skillshare. The first 1000 people to use this link will get a free trial of Skillshare Premium Membership: https://skl.sh/techlead05211"
+            );
+        }
+
+        public static AudioVideoMedia audioVideo(final VideoMediaType type) {
+            final var checksum = IdUtils.uuid();
+            return AudioVideoMedia.with(
+                    checksum,
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/videos/" + checksum,
+                    "",
+                    MediaStatus.PENDING
+            );
+        }
+
+        public static ImageMedia image(final VideoMediaType type) {
+            final var checksum = IdUtils.uuid();
+            return ImageMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/images/" + checksum
             );
         }
     }
