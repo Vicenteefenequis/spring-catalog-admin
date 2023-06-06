@@ -96,6 +96,7 @@ public final class Fixture {
         public static Genre tech() {
             return Genre.with(TECH);
         }
+
         public static Genre business() {
             return Genre.with(BUSINESS);
         }
@@ -122,6 +123,10 @@ public final class Fixture {
             return FAKER.options().option(Rating.values());
         }
 
+        public static VideoMediaType mediaType() {
+            return FAKER.options().option(VideoMediaType.values());
+        }
+
         public static Resource resource(final VideoMediaType type) {
             final String contentType = Match(type).of(
                     Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
@@ -129,7 +134,7 @@ public final class Fixture {
             );
             final String checksum = IdUtils.uuid();
             final byte[] content = "Conteudo".getBytes();
-            return Resource.with(checksum,content, contentType, type.name().toLowerCase());
+            return Resource.with(checksum, content, contentType, type.name().toLowerCase());
         }
 
         public static String description() {
