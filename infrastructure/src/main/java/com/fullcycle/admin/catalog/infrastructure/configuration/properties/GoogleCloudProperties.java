@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalog.infrastructure.configuration.propterties;
+package com.fullcycle.admin.catalog.infrastructure.configuration.properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +28,14 @@ public class GoogleCloudProperties implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet(){
+    public void afterPropertiesSet() {
         log.debug(toString());
     }
 
     @Override
     public String toString() {
         return "GoogleCloudProperties{" +
-                "credentials='" + credentials + '\'' +
-                ", projectId='" + projectId + '\'' +
+                "projectId='" + projectId + '\'' +
                 '}';
     }
 }
