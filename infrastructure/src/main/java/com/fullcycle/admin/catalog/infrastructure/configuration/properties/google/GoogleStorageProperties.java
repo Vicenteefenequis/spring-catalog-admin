@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalog.infrastructure.configuration.properties;
+package com.fullcycle.admin.catalog.infrastructure.configuration.properties.google;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
