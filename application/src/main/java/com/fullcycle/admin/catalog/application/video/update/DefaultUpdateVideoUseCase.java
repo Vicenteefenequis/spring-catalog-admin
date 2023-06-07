@@ -112,11 +112,11 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
                     .orElse(null);
 
             return this.videoGateway.update(aVideo
-                    .setVideo(aVideoMedia)
-                    .setTrailer(aTrailerMedia)
-                    .setBanner(aBannerMedia)
-                    .setThumbnail(aThumbnail)
-                    .setThumbnailHalf(aThumbnailHalf)
+                    .updateVideoMedia(aVideoMedia)
+                    .updateTrailerMedia(aTrailerMedia)
+                    .updateBannerMedia(aBannerMedia)
+                    .updateThumbnailMedia(aThumbnail)
+                    .updateThumbnailHalfMedia(aThumbnailHalf)
             );
         } catch (final Throwable t) {
             throw InternalErrorException.with("An error on create video was observed [videoId:%s]".formatted(anId.getValue()),

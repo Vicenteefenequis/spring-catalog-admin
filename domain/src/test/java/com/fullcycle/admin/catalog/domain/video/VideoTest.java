@@ -150,7 +150,7 @@ public class VideoTest {
 
 
     @Test
-    public void givenValidVideo_whenCallsSetVideo_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateVideoMedia_shouldReturnUpdated() {
         //given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = "A certificação de metodologias que nos auxiliam a lidar com a expansão dos mercados mundiais desafia a capacidade de equalização dos métodos utilizados na avaliação de resultados." +
@@ -181,7 +181,10 @@ public class VideoTest {
         //when
 
         final var aVideoMedia = AudioVideoMedia.with("abs", "Video.mp4", "/123/videos");
-        final var actualVideo = Video.with(aVideo).setVideo(aVideoMedia);
+
+        final var expectedDomainEventSize = 1;
+
+        final var actualVideo = Video.with(aVideo).updateVideoMedia(aVideoMedia);
 
 
         //then
@@ -207,12 +210,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
 
+        Assertions.assertEquals(expectedDomainEventSize, actualVideo.getDomainEvents().size());
+
+        final var actualEvent = (VideoMediaCreated) actualVideo.getDomainEvents().get(0);
+        Assertions.assertEquals(aVideo.getId().getValue(), actualEvent.resourceId());
+        Assertions.assertEquals(aVideoMedia.rawLocation(), actualEvent.filePath());
+        Assertions.assertNotNull(actualEvent.occurredOn());
+
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
     }
 
 
     @Test
-    public void givenValidVideo_whenCallsSetTrailer_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateTrailerMedia_shouldReturnUpdated() {
         //given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = "A certificação de metodologias que nos auxiliam a lidar com a expansão dos mercados mundiais desafia a capacidade de equalização dos métodos utilizados na avaliação de resultados." +
@@ -243,8 +253,8 @@ public class VideoTest {
         //when
 
         final var aTrailerMedia = AudioVideoMedia.with("abs", "Trailer.mp4", "/123/videos");
-        final var actualVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
 
+        final var actualVideo = Video.with(aVideo).updateTrailerMedia(aTrailerMedia);
 
         //then
 
@@ -268,13 +278,17 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
+        final var actualEvent = (VideoMediaCreated) actualVideo.getDomainEvents().get(0);
+        Assertions.assertEquals(aVideo.getId().getValue(), actualEvent.resourceId());
+        Assertions.assertEquals(aTrailerMedia.rawLocation(), actualEvent.filePath());
+        Assertions.assertNotNull(actualEvent.occurredOn());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
     }
 
 
     @Test
-    public void givenValidVideo_whenCallsSetBanner_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateBannerMedia_shouldReturnUpdated() {
         //given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = "A certificação de metodologias que nos auxiliam a lidar com a expansão dos mercados mundiais desafia a capacidade de equalização dos métodos utilizados na avaliação de resultados." +
@@ -305,7 +319,7 @@ public class VideoTest {
         //when
 
         final var aBannerMedia = ImageMedia.with("abs", "Trailer.mp4", "/123/videos");
-        final var actualVideo = Video.with(aVideo).setBanner(aBannerMedia);
+        final var actualVideo = Video.with(aVideo).updateBannerMedia(aBannerMedia);
 
 
         //then
@@ -336,7 +350,7 @@ public class VideoTest {
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetThumb_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateThumbMedia_shouldReturnUpdated() {
         //given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = "A certificação de metodologias que nos auxiliam a lidar com a expansão dos mercados mundiais desafia a capacidade de equalização dos métodos utilizados na avaliação de resultados." +
@@ -367,7 +381,7 @@ public class VideoTest {
         //when
 
         final var aThumbMedia = ImageMedia.with("abs", "Trailer.mp4", "/123/videos");
-        final var actualVideo = Video.with(aVideo).setThumbnail(aThumbMedia);
+        final var actualVideo = Video.with(aVideo).updateThumbnailMedia(aThumbMedia);
 
 
         //then
@@ -397,7 +411,7 @@ public class VideoTest {
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetThumbHalf_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateThumbHalfMedia_shouldReturnUpdated() {
         //given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = "A certificação de metodologias que nos auxiliam a lidar com a expansão dos mercados mundiais desafia a capacidade de equalização dos métodos utilizados na avaliação de resultados." +
@@ -428,7 +442,7 @@ public class VideoTest {
         //when
 
         final var aThumbHalfMedia = ImageMedia.with("abs", "Trailer.mp4", "/123/videos");
-        final var actualVideo = Video.with(aVideo).setThumbnailHalf(aThumbHalfMedia);
+        final var actualVideo = Video.with(aVideo).updateThumbnailHalfMedia(aThumbHalfMedia);
 
 
         //then
