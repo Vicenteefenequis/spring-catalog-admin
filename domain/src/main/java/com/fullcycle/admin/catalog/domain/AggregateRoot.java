@@ -1,6 +1,6 @@
 package com.fullcycle.admin.catalog.domain;
 
-import com.fullcycle.admin.catalog.domain.event.DomainEvent;
+import com.fullcycle.admin.catalog.domain.events.DomainEvent;
 
 import java.util.Collections;
 import java.util.List;

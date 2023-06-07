@@ -1,6 +1,6 @@
 package com.fullcycle.admin.catalog.domain;
 
-import com.fullcycle.admin.catalog.domain.event.DomainEvent;
+import com.fullcycle.admin.catalog.domain.events.DomainEvent;
 import com.fullcycle.admin.catalog.domain.utils.IdUtils;
 import com.fullcycle.admin.catalog.domain.utils.InstantUtils;
 import com.fullcycle.admin.catalog.domain.validation.ValidationHandler;

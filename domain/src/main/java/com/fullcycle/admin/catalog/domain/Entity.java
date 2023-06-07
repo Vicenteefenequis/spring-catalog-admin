@@ -1,7 +1,7 @@
 package com.fullcycle.admin.catalog.domain;
 
-import com.fullcycle.admin.catalog.domain.event.DomainEvent;
-import com.fullcycle.admin.catalog.domain.event.DomainEventPublisher;
+import com.fullcycle.admin.catalog.domain.events.DomainEvent;
+import com.fullcycle.admin.catalog.domain.events.DomainEventPublisher;
 import com.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public abstract class Entity<ID extends Identifier> {
         return Collections.unmodifiableList(domainEvents);
     }
 
-    public void publishDomainEvents(final DomainEventPublisher<DomainEvent> publisher) {
+    public void publishDomainEvents(final DomainEventPublisher publisher) {
         if (publisher == null) {
             return;
         }

@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalog.domain.event;
+package com.fullcycle.admin.catalog.domain.events;
 
 import java.io.Serializable;
 import java.time.Instant;

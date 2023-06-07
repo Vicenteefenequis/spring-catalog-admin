@@ -3,7 +3,7 @@ package com.fullcycle.admin.catalog.domain.video;
 import com.fullcycle.admin.catalog.domain.AggregateRoot;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
-import com.fullcycle.admin.catalog.domain.event.DomainEvent;
+import com.fullcycle.admin.catalog.domain.events.DomainEvent;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
 import com.fullcycle.admin.catalog.domain.utils.InstantUtils;
 import com.fullcycle.admin.catalog.domain.validation.ValidationHandler;
