@@ -3,6 +3,8 @@ package com.fullcycle.admin.catalog.infrastructure.video;
 import com.fullcycle.admin.catalog.domain.Identifier;
 import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.domain.video.*;
+import com.fullcycle.admin.catalog.infrastructure.configuration.annotations.VideoCreatedQueue;
+import com.fullcycle.admin.catalog.infrastructure.services.EventService;
 import com.fullcycle.admin.catalog.infrastructure.utils.SqlUtils;
 import com.fullcycle.admin.catalog.infrastructure.video.persistence.VideoJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.video.persistence.VideoRepository;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.fullcycle.admin.catalog.domain.utils.CollectionUtils.mapTo;
@@ -21,8 +24,14 @@ public class DefaultVideoGateway implements VideoGateway {
 
     private final VideoRepository videoRepository;
 
-    public DefaultVideoGateway(final VideoRepository videoRepository) {
-        this.videoRepository = videoRepository;
+    private final EventService eventService;
+
+    public DefaultVideoGateway(
+            final VideoRepository videoRepository,
+            @VideoCreatedQueue final EventService eventService
+    ) {
+        this.videoRepository = Objects.requireNonNull(videoRepository);
+        this.eventService = Objects.requireNonNull(eventService);
     }
 
     @Override
@@ -77,8 +86,12 @@ public class DefaultVideoGateway implements VideoGateway {
 
 
     private Video save(final Video aVideo) {
-        return this.videoRepository.save(VideoJpaEntity.from(aVideo))
+        final var result = this.videoRepository.save(VideoJpaEntity.from(aVideo))
                 .toAggregate();
+
+        aVideo.publishDomainEvents(this.eventService::send);
+
+        return result;
     }
 
 
