@@ -7,7 +7,7 @@ import java.util.Set;
 public record CreateVideoRequest(
         @JsonProperty("title") String title,
         @JsonProperty("description") String description,
-        @JsonProperty("duration") Integer duration,
+        @JsonProperty("duration") Double duration,
 
         @JsonProperty("year_launched") Integer yearLaunched,
         @JsonProperty("opened") Boolean opened,
