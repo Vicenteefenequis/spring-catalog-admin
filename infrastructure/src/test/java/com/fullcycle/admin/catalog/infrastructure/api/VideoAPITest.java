@@ -5,6 +5,7 @@ import com.fullcycle.admin.catalog.ControllerTest;
 import com.fullcycle.admin.catalog.application.video.create.CreateVideoCommand;
 import com.fullcycle.admin.catalog.application.video.create.CreateVideoOutput;
 import com.fullcycle.admin.catalog.application.video.create.CreateVideoUseCase;
+import com.fullcycle.admin.catalog.application.video.delete.DeleteVideoUseCase;
 import com.fullcycle.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.fullcycle.admin.catalog.application.video.retrieve.get.VideoOutput;
 import com.fullcycle.admin.catalog.application.video.update.UpdateVideoCommand;
@@ -38,8 +39,7 @@ import static com.fullcycle.admin.catalog.domain.utils.CollectionUtils.mapTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,6 +61,9 @@ public class VideoAPITest {
 
     @MockBean
     private UpdateVideoUseCase updateVideoUseCase;
+
+    @MockBean
+    private DeleteVideoUseCase deleteVideoUseCase;
 
 
     @Test
@@ -446,6 +449,26 @@ public class VideoAPITest {
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
 
         verify(updateVideoUseCase).execute(any());
+    }
+
+
+    @Test
+    public void givenValidId_whenCallsDeleteById_shouldDeleteIt() throws Exception {
+        //given
+        final var expectedId = VideoID.unique();
+
+        doNothing().when(deleteVideoUseCase).execute(any());
+
+        //when
+
+        final var aRequest = delete("/videos/{id}", expectedId.getValue());
+
+        final var response = this.mvc.perform(aRequest);
+        //then
+
+        response.andExpect(status().isNoContent());
+
+        verify(deleteVideoUseCase).execute(eq(expectedId.getValue()));
     }
 
 }
