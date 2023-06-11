@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record ImageMediaResponse(
         @JsonProperty("id") String id,
         @JsonProperty("checksum") String checksum,
-        @JsonProperty("checksum") String name,
+        @JsonProperty("name") String name,
         @JsonProperty("location") String location
 
 ) {
