@@ -2,10 +2,13 @@ package com.fullcycle.admin.catalog.infrastructure.api.controllers;
 
 import com.fullcycle.admin.catalog.application.video.create.CreateVideoCommand;
 import com.fullcycle.admin.catalog.application.video.create.CreateVideoUseCase;
+import com.fullcycle.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.fullcycle.admin.catalog.domain.resource.Resource;
 import com.fullcycle.admin.catalog.infrastructure.api.VideoAPI;
 import com.fullcycle.admin.catalog.infrastructure.utils.HashingUtils;
 import com.fullcycle.admin.catalog.infrastructure.video.models.CreateVideoRequest;
+import com.fullcycle.admin.catalog.infrastructure.video.models.VideoResponse;
+import com.fullcycle.admin.catalog.infrastructure.video.presenters.VideoApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +21,14 @@ import java.util.Set;
 public class VideoController implements VideoAPI {
 
     private final CreateVideoUseCase createVideoUseCase;
+    private final GetVideoByIdUseCase getVideoByIdUseCase;
 
-    public VideoController(final CreateVideoUseCase createVideoUseCase) {
+    public VideoController(
+            final CreateVideoUseCase createVideoUseCase,
+            final GetVideoByIdUseCase getVideoByIdUseCase
+    ) {
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
+        this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
     }
 
 
@@ -81,6 +89,12 @@ public class VideoController implements VideoAPI {
 
         final var output = this.createVideoUseCase.execute(aCmd);
         return ResponseEntity.created(URI.create("/videos/" + output.id())).body(output);
+    }
+
+    @Override
+    public VideoResponse getById(final String anId) {
+        final var aOutput = this.getVideoByIdUseCase.execute(anId);
+        return VideoApiPresenter.present(aOutput);
     }
 
     private Resource resourceOf(final MultipartFile part) {
