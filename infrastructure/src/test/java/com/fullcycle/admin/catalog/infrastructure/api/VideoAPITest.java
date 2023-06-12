@@ -260,6 +260,47 @@ public class VideoAPITest {
 
 
     @Test
+    public void givenAnInvalidCommand_whenCallsCreatePartial_shouldError() throws Exception {
+        //given
+        final var expectedErrorMessage = "title is required";
+
+        when(createVideoUseCase.execute(any()))
+                .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
+
+        //when
+
+        final var aRequest = post("/videos")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                          "title":"Ola mundo"
+                        }
+                        """);
+
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
+    }
+
+
+    @Test
+    public void givenAnEmptyBody_whenCallsCreatePartial_shouldError() throws Exception {
+        //when
+        final var aRequest = post("/videos")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(status().isBadRequest());
+    }
+
+
+    @Test
     public void givenAValidId_whenCallsGetById_shouldReturnVideo() throws Exception {
         //given
         final var wesley = Fixture.CastMembers.wesley();
