@@ -1,8 +1,8 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
-group = 'com.fullcycle.admin.catalog'
 version = '1.0-SNAPSHOT'
 
 repositories {
@@ -10,10 +10,18 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.vavr:vavr:0.10.4'
+
     testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
-test {
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+
+tasks.named('test') {
     useJUnitPlatform()
 }

@@ -15,7 +15,9 @@ import org.springframework.context.annotation.Profile;
 import org.threeten.bp.Duration;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Base64;
+import java.util.Objects;
 
 @Configuration
 @Profile({"development", "production"})
@@ -33,15 +35,11 @@ public class GoogleCloudConfig {
     }
 
     @Bean
-    public Credentials credentials(final GoogleCloudProperties googleCloudProperties) {
-        final var jsonContent = Base64.getDecoder()
-                .decode(googleCloudProperties.getCredentials());
+    public Credentials credentials(final GoogleCloudProperties props) throws IOException {
+        final var jsonBin = Base64.getDecoder()
+                .decode(Objects.requireNonNull(props.getCredentials()));
 
-        try (final var stream = new ByteArrayInputStream(jsonContent)) {
-            return GoogleCredentials.fromStream(stream);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
+        return GoogleCredentials.fromStream(new ByteArrayInputStream(jsonBin));
     }
 
 

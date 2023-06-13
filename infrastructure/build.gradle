@@ -9,7 +9,8 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+    id 'java-conventions'
+    id 'jacoco-report-aggregation'
     id 'application'
     id 'org.springframework.boot' version '2.6.7'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
@@ -17,16 +18,13 @@ plugins {
 }
 
 group = 'com.fullcycle.admin.catalog.infrastructure'
-version = '1.0-SNAPSHOT'
 
 bootJar {
     archiveFileName.set('application.jar')
     destinationDirectory.set(file("${rootProject.buildDir}/libs"))
 }
 
-repositories {
-    mavenCentral()
-}
+
 
 dependencies {
     implementation(project(":domain"))
@@ -73,6 +71,22 @@ flyway {
     password = System.getenv('FLYWAY_PASSWORD') ?: 'root'
 }
 
-test {
-    useJUnitPlatform()
+
+
+testCodeCoverageReport {
+    reports {
+        xml {
+            enabled true
+            destination file("$rootDir/build/reports/jacoco/test/jacocoTestReport.xml")
+        }
+
+        html {
+            enabled true
+            destination file("$rootDir/build/reports/jacoco/test/")
+        }
+    }
+}
+
+tasks.named("jacocoTestReport") {
+    dependsOn tasks.named("testCodeCoverageReport", JacocoReport)
 }
