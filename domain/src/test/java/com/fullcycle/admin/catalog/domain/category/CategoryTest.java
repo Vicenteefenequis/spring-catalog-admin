@@ -1,11 +1,12 @@
 package com.fullcycle.admin.catalog.domain.category;
 
+import com.fullcycle.admin.catalog.domain.UnitTest;
 import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
 import com.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CategoryTest {
+public class CategoryTest extends UnitTest {
     @Test
     public void givenAValidaParams_whenCallNewCategory_thenInstantiateACategory() {
         final var expectedName = "Filmes";
@@ -226,7 +227,6 @@ public class CategoryTest {
         Assertions.assertDoesNotThrow(() -> aCategory.validate(new ThrowsValidationHandler()));
         Assertions.assertNull(aCategory.getDeletedAt());
         Assertions.assertTrue(aCategory.isActive());
-
 
 
         final var createdAt = aCategory.getCreatedAt();

@@ -1,6 +1,7 @@
 package com.fullcycle.admin.catalog.domain.genre;
 
 
+import com.fullcycle.admin.catalog.domain.UnitTest;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreTest {
+public class GenreTest extends UnitTest {
 
 
     @Test
@@ -391,8 +392,6 @@ public class GenreTest {
     }
 
 
-
-
     @Test
     public void givenAInvalidNullAsCategoryID_whenCallAddCategory_shouldReceiveOK() {
         // given
@@ -467,7 +466,7 @@ public class GenreTest {
 
         final var expectedName = "Ação";
         final var expectedIsActive = true;
-        final var expectedCategories = List.of(moviesID,seriesID);
+        final var expectedCategories = List.of(moviesID, seriesID);
 
         final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
         actualGenre.update(

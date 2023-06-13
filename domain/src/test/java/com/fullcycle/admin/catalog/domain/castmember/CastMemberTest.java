@@ -1,10 +1,11 @@
 package com.fullcycle.admin.catalog.domain.castmember;
 
+import com.fullcycle.admin.catalog.domain.UnitTest;
 import com.fullcycle.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CastMemberTest {
+public class CastMemberTest extends UnitTest {
 
     @Test
     public void givenAValidParams_whenCallsNewMember_thenInstantiateACastMember() {
@@ -108,7 +109,7 @@ public class CastMemberTest {
 
         actualMember.update(expectedName, expectedType);
 
-        Assertions.assertEquals(acutalID,actualMember.getId());
+        Assertions.assertEquals(acutalID, actualMember.getId());
         Assertions.assertEquals(expectedName, actualMember.getName());
         Assertions.assertEquals(expectedType, actualMember.getType());
         Assertions.assertEquals(actualCreatedAt, actualMember.getCreatedAt());
@@ -161,7 +162,6 @@ public class CastMemberTest {
     }
 
 
-
     @Test
     public void givenAValidCastMember_whenCallUpdateWithNameMoreThan255_shouldNotificationError() {
         final var expectedName = "" +
@@ -209,7 +209,6 @@ public class CastMemberTest {
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
     }
-
 
 
 }

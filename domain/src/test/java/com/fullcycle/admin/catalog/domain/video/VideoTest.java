@@ -1,5 +1,6 @@
 package com.fullcycle.admin.catalog.domain.video;
 
+import com.fullcycle.admin.catalog.domain.UnitTest;
 import com.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Year;
 import java.util.Set;
 
-public class VideoTest {
+public class VideoTest extends UnitTest {
 
     @Test
     public void givenAValidParams_whenCallsNewVideo_shouldInstantiate() {
