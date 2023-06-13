@@ -1,6 +1,20 @@
 version: '3.7'
 
 services:
+  app:
+    container_name: admin_video_app
+    build: .
+    profiles: ["app"]
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - admin_video_network
   mysql:
     container_name: admin_video_mysql
     image: mysql:latest
