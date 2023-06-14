@@ -3,13 +3,13 @@ version: '3.7'
 services:
   app:
     container_name: admin_video_app
-    build: .
+    build: ../..
     profiles: [ "app" ]
     restart: unless-stopped
     env_file:
-      - .env
+      - ../../.env
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - mysql
       - rabbitmq
@@ -21,12 +21,15 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: admin_video
+      MYSQL_ROOT_HOST: '%'
     security_opt:
       - seccomp:unconfined
     ports:
-      - 3306:3306
+      - "3306:3306"
     networks:
       - admin_video_network
+    volumes:
+      - ../.docker/mysql:/var/lib/mysql:rw
 
   rabbitmq:
     container_name: adm_videos_rabbitmq
@@ -52,6 +55,8 @@ services:
       - "8443:8080"
     command:
       - start-dev
+    volumes:
+      - ../.docker/keycloak:/opt/keycloak/data/h2:rw
     networks:
       - admin_video_network
 
