@@ -1,20 +1,6 @@
 version: '3.7'
 
 services:
-  app:
-    container_name: admin_video_app
-    build: ../..
-    profiles: [ "app" ]
-    restart: unless-stopped
-    env_file:
-      - ../../.env
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
-      - rabbitmq
-    networks:
-      - admin_video_network
   mysql:
     container_name: admin_video_mysql
     image: mysql:latest
@@ -27,7 +13,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - admin_video_network
+      - admin_video_services
     volumes:
       - ../.docker/mysql:/var/lib/mysql:rw
 
@@ -43,7 +29,7 @@ services:
       - 15672:15672
       - 5672:5672
     networks:
-      - admin_video_network
+      - admin_video_services
 
   keycloak:
     container_name: adm_videos_keycloak
@@ -58,7 +44,7 @@ services:
     volumes:
       - ../.docker/keycloak:/opt/keycloak/data/h2:rw
     networks:
-      - admin_video_network
+      - admin_video_services
 
 networks:
-  admin_video_network:
+  admin_video_services:
