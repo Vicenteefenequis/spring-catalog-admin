@@ -2,6 +2,10 @@ name: CI Pipeline
 
 on:
   push:
+    branches:
+      - 'features/**'
+      - 'bugfixes/**'
+      - 'modulos/**'
   workflow_dispatch:
 
 jobs:
