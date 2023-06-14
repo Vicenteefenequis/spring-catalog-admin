@@ -3,9 +3,10 @@ plugins {
     id 'java-library'
 }
 
-group = 'com.fullcycle.admin.catalog.application'
+group 'com.fullcycle.admin.catalogo.application'
 
 dependencies {
     implementation(project(":domain"))
+
     testImplementation(project(path: ':domain', configuration: 'testClasses'))
 }

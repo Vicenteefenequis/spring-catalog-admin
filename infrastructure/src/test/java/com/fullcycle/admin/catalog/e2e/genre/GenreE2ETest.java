@@ -1,5 +1,6 @@
 package com.fullcycle.admin.catalog.e2e.genre;
 
+import com.fullcycle.admin.catalog.ApiTest;
 import com.fullcycle.admin.catalog.E2ETest;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.genre.GenreID;
@@ -168,7 +169,7 @@ public class GenreE2ETest implements MockDsl {
     @Test
     public void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByGettingANotFoundGenre() throws Exception {
 
-        final var aRequest = get("/genres/123").contentType(MediaType.APPLICATION_JSON);
+        final var aRequest = get("/genres/123").with(ApiTest.ADMIN_JWT).contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(aRequest).andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value("Genre with ID 123 was not found"));
 
@@ -256,9 +257,8 @@ public class GenreE2ETest implements MockDsl {
         final var actualGenre = genreRepository.findById(actualId.getValue()).get();
 
 
-
         Assertions.assertEquals(expectedName, actualGenre.getName());
-        Assertions.assertEquals(expectedCategories,actualGenre.getCategoriesIDs());
+        Assertions.assertEquals(expectedCategories, actualGenre.getCategoriesIDs());
         Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
         Assertions.assertNotNull(actualGenre.getCreatedAt());
         Assertions.assertNotNull(actualGenre.getUpdatedAt());

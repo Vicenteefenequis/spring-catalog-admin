@@ -3,20 +3,17 @@ plugins {
     id 'java-library'
 }
 
-group = 'com.fullcycle.admin.catalog.domain'
-
+group 'com.fullcycle.admin.catalogo.domain'
 
 dependencies {
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
 }
-
 
 configurations {
     testClasses {
         extendsFrom(testImplementation)
     }
 }
-
 
 task testJar(type: Jar) {
     archiveClassifier.set('test')

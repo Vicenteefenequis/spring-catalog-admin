@@ -1,5 +1,6 @@
 package com.fullcycle.admin.catalog.e2e.category;
 
+import com.fullcycle.admin.catalog.ApiTest;
 import com.fullcycle.admin.catalog.E2ETest;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.e2e.MockDsl;
@@ -176,7 +177,7 @@ public class CategoryE2ETest implements MockDsl {
     @Test
     public void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByGettingANotFoundCategory() throws Exception {
 
-        final var aRequest = get("/categories/123").contentType(MediaType.APPLICATION_JSON);
+        final var aRequest = get("/categories/123").with(ApiTest.ADMIN_JWT).contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(aRequest).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Category with ID 123 was not found"));
