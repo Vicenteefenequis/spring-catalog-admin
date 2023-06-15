@@ -2,8 +2,10 @@
 docker network create admin_video_services
 docker network create elastic
 
+sudo chown root app/filebeat/filebeat.docker.yml
 mkdir -m 777 .docker
 mkdir -m 777 .docker/keycloak
+mkdir -m 777 .docker/filebeat
 mkdir -m 777 .docker/es01
 
 
